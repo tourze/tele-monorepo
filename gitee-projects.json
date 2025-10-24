@@ -1,8 +1,8 @@
 {
   "projects": [
     {
-      "name": "example-project",
-      "giteeUrl": "https://gitee.com/user/example-project.git",
+      "name": "seven-fish-customer-service",
+      "giteeUrl": "https://gitee.com/umworks/seven-fish-customer-service.git",
       "branch": "master",
       "appsDir": true
     }

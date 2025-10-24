@@ -17,46 +17,16 @@ vibe-shell/
 
 ## 快速开始
 
-### 1. 添加 Gitee 项目
+### 1. 配置项目
 
-```bash
-# 添加项目并克隆到 apps 目录
-npm run gitee:add <项目名称> <Gitee仓库地址> [分支名]
-
-# 示例：
-npm run gitee:add my-app https://gitee.com/username/my-app.git
-npm run gitee:add my-app https://gitee.com/username/my-app.git develop
-```
-
-### 2. 管理已配置的项目
-
-```bash
-# 列出所有配置的项目及其状态
-npm run gitee:list
-
-# 克隆所有配置的项目
-npm run gitee:clone
-
-# 更新所有项目（如果项目不存在会自动克隆）
-npm run gitee:pull
-
-# 同步所有项目（等同于 pull）
-npm run gitee:sync
-
-# 移除指定项目
-npm run gitee:remove <项目名称>
-```
-
-### 3. 配置文件
-
-编辑 `gitee-projects.json` 文件来管理项目配置：
+编辑 `gitee-projects.json` 文件来添加需要管理的项目：
 
 ```json
 {
   "projects": [
     {
-      "name": "example-project",
-      "giteeUrl": "https://gitee.com/user/example-project.git",
+      "name": "seven-fish-customer-service",
+      "giteeUrl": "https://gitee.com/umworks/seven-fish-customer-service.git",
       "branch": "master",
       "appsDir": true
     }
@@ -66,16 +36,48 @@ npm run gitee:remove <项目名称>
 }
 ```
 
+**配置说明：**
+- `name`: 项目名称，将作为 apps 目录下的子目录名
+- `giteeUrl`: Gitee 仓库地址
+- `branch`: 要克隆的分支（可选，默认为 master）
+- `appsDir`: 是否放在 apps 目录下（通常为 true）
+
+### 2. 克隆和管理项目
+
+```bash
+# 克隆所有配置的项目
+npm run gitee:clone
+
+# 列出所有配置的项目及其状态
+npm run gitee:list
+
+# 更新所有项目（如果项目不存在会自动克隆）
+npm run gitee:pull
+
+# 同步所有项目（等同于 pull）
+npm run gitee:sync
+```
+
+**clone 命令说明：**
+- 读取 `gitee-projects.json` 配置文件
+- 将所有配置的项目克隆到 `apps/` 目录下
+- 如果项目已存在，则跳过克隆
+- 支持指定分支克隆（默认为 master 分支）
+
+### 3. 手动移除项目
+
+如需移除项目，请手动：
+1. 删除 `apps/` 目录下对应的项目文件夹
+2. 从 `gitee-projects.json` 中移除相应的配置项
+
 ## 详细功能说明
 
 ### 项目管理命令
 
-- **`gitee:add <name> <url> [branch]`** - 添加新项目到配置并立即克隆
 - **`gitee:clone`** - 克隆所有配置的项目到 `apps` 目录
 - **`gitee:pull`** - 拉取所有项目的最新更新（如果项目不存在会自动克隆）
 - **`gitee:sync`** - 同步所有项目（等同于 pull）
 - **`gitee:list`** - 显示所有配置的项目及其状态（✓ 表示已存在，✗ 表示未克隆）
-- **`gitee:remove <name>`** - 移除指定项目（从文件系统和配置中删除）
 
 ### 脚本直接调用
 
@@ -85,14 +87,34 @@ npm run gitee:remove <项目名称>
 # 查看帮助
 node scripts/manage-gitee-projects.js
 
-# 添加项目
-node scripts/manage-gitee-projects.js add my-project https://gitee.com/user/my-project.git
-
-# 其他命令
+# 克隆所有配置的项目
 node scripts/manage-gitee-projects.js clone
+
+# 拉取最新代码
 node scripts/manage-gitee-projects.js pull
+
+# 同步项目
+node scripts/manage-gitee-projects.js sync
+
+# 列出项目状态
 node scripts/manage-gitee-projects.js list
 ```
+
+**使用示例：**
+
+```bash
+# 1. 编辑 gitee-projects.json 添加项目配置
+# 2. 运行克隆命令
+npm run gitee:clone
+
+# 或者直接调用脚本
+node scripts/manage-gitee-projects.js clone
+```
+
+**执行结果：**
+- 项目将被克隆到 `apps/项目名称/` 目录
+- 保持完整的 Git 历史和版本控制
+- 可以独立在项目目录内进行 Git 操作
 
 ## Git 配置
 
@@ -102,10 +124,11 @@ node scripts/manage-gitee-projects.js list
 
 ## 工作流建议
 
-1. **项目配置** - 将常用的 Gitee 项目添加到 `gitee-projects.json`
+1. **项目配置** - 直接编辑 `gitee-projects.json` 文件添加需要管理的项目
 2. **团队协作** - 团队成员克隆此 monorepo 后，运行 `npm run gitee:clone` 获取所有项目
 3. **定期同步** - 使用 `npm run gitee:sync` 保持项目最新
 4. **项目更新** - 在各个子项目目录内正常使用 Git 命令
+5. **移除项目** - 手动删除项目文件夹并编辑配置文件移除相应配置
 
 ## 注意事项
 
@@ -113,9 +136,7 @@ node scripts/manage-gitee-projects.js list
 - 建议使用 SSH 密钥以避免频繁输入密码
 - 如果 Gitee 仓库是私有的，请配置相应的访问凭据
 
-## 扩展功能
-
-### 手动编辑配置文件
+### 批量配置项目
 
 你可以直接编辑 `gitee-projects.json` 来批量添加或修改项目配置：
 
@@ -125,14 +146,18 @@ node scripts/manage-gitee-projects.js list
     {
       "name": "frontend-app",
       "giteeUrl": "https://gitee.com/team/frontend-app.git",
-      "branch": "main"
+      "branch": "main",
+      "appsDir": true
     },
     {
       "name": "backend-api",
       "giteeUrl": "https://gitee.com/team/backend-api.git",
-      "branch": "develop"
+      "branch": "develop",
+      "appsDir": true
     }
-  ]
+  ],
+  "defaultAppsDir": "apps",
+  "defaultBranch": "master"
 }
 ```
 

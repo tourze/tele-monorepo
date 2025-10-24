@@ -64,24 +64,6 @@ function pullProject(project) {
   }
 }
 
-function removeProject(project) {
-  const { name } = project;
-  const targetDir = path.join(__dirname, '..', 'apps', name);
-
-  if (!fs.existsSync(targetDir)) {
-    console.log(`Project ${name} not found in apps/${name}`);
-    return;
-  }
-
-  console.log(`Removing ${name} from apps/${name}...`);
-
-  try {
-    fs.rmSync(targetDir, { recursive: true, force: true });
-    console.log(`Successfully removed ${name}`);
-  } catch (error) {
-    console.error(`Failed to remove ${name}:`, error.message);
-  }
-}
 
 function listProjects() {
   const config = loadConfig();
@@ -94,28 +76,6 @@ function listProjects() {
   });
 }
 
-function addProject(name, giteeUrl, branch = 'master') {
-  const config = loadConfig();
-
-  // Check if project already exists
-  if (config.projects.find(p => p.name === name)) {
-    console.error(`Project ${name} already exists in configuration`);
-    process.exit(1);
-  }
-
-  const newProject = {
-    name,
-    giteeUrl,
-    branch,
-    appsDir: true
-  };
-
-  config.projects.push(newProject);
-  saveConfig(config);
-
-  console.log(`Added project ${name} to configuration`);
-  cloneProject(newProject);
-}
 
 function main() {
   const [command, ...args] = process.argv.slice(2);
@@ -130,29 +90,12 @@ function main() {
       config.projects.forEach(pullProject);
       break;
 
-    case 'remove':
-      const projectToRemove = config.projects.find(p => p.name === args[0]);
-      if (projectToRemove) {
-        removeProject(projectToRemove);
-        config.projects = config.projects.filter(p => p.name !== args[0]);
-        saveConfig(config);
-      } else {
-        console.error(`Project ${args[0]} not found in configuration`);
-      }
-      break;
-
+  
     case 'list':
       listProjects();
       break;
 
-    case 'add':
-      if (args.length < 2) {
-        console.error('Usage: node manage-gitee-projects.js add <name> <gitee-url> [branch]');
-        process.exit(1);
-      }
-      addProject(args[0], args[1], args[2]);
-      break;
-
+    
     case 'sync':
       config.projects.forEach(pullProject);
       break;
@@ -166,15 +109,11 @@ Commands:
   pull          Pull updates for all projects (clone if missing)
   sync          Sync all projects (same as pull)
   list          List all configured projects and their status
-  add <name> <url> [branch]  Add a new project and clone it
-  remove <name> Remove a project from both config and filesystem
 
 Examples:
   node manage-gitee-projects.js clone
   node manage-gitee-projects.js pull
-  node manage-gitee-projects.js add my-app https://gitee.com/user/my-app.git
-  node manage-gitee-projects.js add my-app https://gitee.com/user/my-app.git develop
-  node manage-gitee-projects.js remove my-app
+  node manage-gitee-projects.js list
       `);
       process.exit(1);
   }
@@ -188,7 +127,5 @@ module.exports = {
   loadConfig,
   cloneProject,
   pullProject,
-  removeProject,
-  listProjects,
-  addProject
+  listProjects
 };

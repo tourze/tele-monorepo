@@ -6,9 +6,7 @@
     "gitee:clone": "node scripts/manage-gitee-projects.js clone",
     "gitee:pull": "node scripts/manage-gitee-projects.js pull",
     "gitee:sync": "node scripts/manage-gitee-projects.js sync",
-    "gitee:list": "node scripts/manage-gitee-projects.js list",
-    "gitee:add": "node scripts/manage-gitee-projects.js add",
-    "gitee:remove": "node scripts/manage-gitee-projects.js remove"
+    "gitee:list": "node scripts/manage-gitee-projects.js list"
   },
   "private": true,
   "dependencies": {},
