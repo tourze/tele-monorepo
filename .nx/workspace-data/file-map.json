@@ -6,16 +6,28 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "gitee-projects.json",
-        "hash": "16744887714468662060"
+        "file": "nx.json",
+        "hash": "16472968272130721479"
+      },
+      {
+        "file": "scripts/manage-gitee-projects.js",
+        "hash": "8583695399311542407"
+      },
+      {
+        "file": "package.json",
+        "hash": "11388201423564719862"
+      },
+      {
+        "file": "graph.json",
+        "hash": "17799432784965957213"
       },
       {
         "file": "README.md",
-        "hash": "11559236077543741606"
+        "hash": "15844973788271529996"
       },
       {
-        "file": "nx.json",
-        "hash": "16472968272130721479"
+        "file": "gitee-projects.json",
+        "hash": "16744887714468662060"
       },
       {
         "file": "package-lock.json",
@@ -28,18 +40,6 @@
       {
         "file": ".gitignore",
         "hash": "14178353650494525951"
-      },
-      {
-        "file": "graph.json",
-        "hash": "17799432784965957213"
-      },
-      {
-        "file": "scripts/manage-gitee-projects.js",
-        "hash": "5654016981757217406"
-      },
-      {
-        "file": "package.json",
-        "hash": "7180337461941862550"
       }
     ],
     "projectFileMap": {}

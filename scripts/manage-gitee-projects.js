@@ -44,6 +44,28 @@ function cloneProject(project) {
   }
 }
 
+function cloneFromUrl(giteeUrl) {
+  // Extract project name from URL
+  const urlParts = giteeUrl.split('/');
+  const repoName = urlParts[urlParts.length - 1].replace('.git', '');
+  const targetDir = path.join(__dirname, '..', 'apps', repoName);
+
+  if (fs.existsSync(targetDir)) {
+    console.log(`Project ${repoName} already exists in apps/${repoName}`);
+    return;
+  }
+
+  console.log(`Cloning ${repoName} from ${giteeUrl}...`);
+
+  try {
+    execSync(`git clone ${giteeUrl} ${targetDir}`, { stdio: 'inherit' });
+    console.log(`Successfully cloned ${repoName} to apps/${repoName}`);
+  } catch (error) {
+    console.error(`Failed to clone ${repoName}:`, error.message);
+    process.exit(1);
+  }
+}
+
 function pullProject(project) {
   const { name, branch = 'master' } = project;
   const targetDir = path.join(__dirname, '..', 'apps', name);
@@ -79,25 +101,31 @@ function listProjects() {
 
 function main() {
   const [command, ...args] = process.argv.slice(2);
-  const config = loadConfig();
 
   switch (command) {
     case 'clone':
-      config.projects.forEach(cloneProject);
+      if (args.length > 0 && args[0].startsWith('http')) {
+        // Direct clone with URL
+        cloneFromUrl(args[0]);
+      } else {
+        // Clone all configured projects
+        const config = loadConfig();
+        config.projects.forEach(cloneProject);
+      }
       break;
 
     case 'pull':
+      const config = loadConfig();
       config.projects.forEach(pullProject);
       break;
 
-  
     case 'list':
       listProjects();
       break;
 
-    
     case 'sync':
-      config.projects.forEach(pullProject);
+      const syncConfig = loadConfig();
+      syncConfig.projects.forEach(pullProject);
       break;
 
     default:
@@ -105,13 +133,14 @@ function main() {
 Usage: node manage-gitee-projects.js <command> [args]
 
 Commands:
-  clone         Clone all configured projects
-  pull          Pull updates for all projects (clone if missing)
-  sync          Sync all projects (same as pull)
+  clone [url]   Clone project(s) - with URL clones directly, without URL clones all configured
+  pull          Pull updates for all configured projects
+  sync          Sync all configured projects (same as pull)
   list          List all configured projects and their status
 
 Examples:
   node manage-gitee-projects.js clone
+  node manage-gitee-projects.js clone https://gitee.com/user/project.git
   node manage-gitee-projects.js pull
   node manage-gitee-projects.js list
       `);
