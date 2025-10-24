@@ -22,7 +22,12 @@
       "Bash(node:*)",
       "Bash(npx nx seven-fish-customer-service:build:*)",
       "Bash(find:*)",
-      "Bash(npx nx reset:*)"
+      "Bash(npx nx reset:*)",
+      "Bash(npm install:*)",
+      "Bash(openspec:*)",
+      "Bash(npx openspec:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm search:*)"
     ],
     "deny": [],
     "ask": []

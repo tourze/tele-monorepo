@@ -182,8 +182,8 @@ function runOpenSpecValidation() {
 
     success(`OpenSpec CLI 已安装: ${result.trim()}`);
 
-    // 尝试验证
-    execSync('npx openspec validate --root openspec/', {
+    // 尝试验证所有规范和变更
+    execSync('openspec validate --all', {
       stdio: 'inherit',
       cwd: PROJECT_ROOT
     });
