@@ -75,6 +75,40 @@ git push
 git push origin branch-name
 ```
 
+## OpenSpec 开发规范
+
+项目使用 OpenSpec 进行规范驱动的开发管理，确保代码质量和一致性。
+
+### 快速验证
+
+```bash
+# 检查 OpenSpec 配置是否正确
+npm run openspec:validate
+```
+
+### 查看规范
+
+- 📋 [项目概览](openspec/project.md) - 技术栈和架构说明
+- 🔧 [React 开发规范](openspec/specs/react-standards/spec.md) - 组件开发标准
+- ⚙️ [Nx 工作区规范](openspec/specs/nx-workflow/spec.md) - 多项目管理流程
+
+### 项目启动
+
+```bash
+# UTC 项目 (React 17 + TypeScript)
+npm run utc-react:dev
+
+# Seven Fish 项目 (React 16 + JavaScript)
+npm run seven-fish:start
+```
+
+### 规范要点
+
+- **组件规范**: 函数组件 + TypeScript (utc-react) / JavaScript (seven-fish)
+- **代码质量**: 文件行数限制，复杂度控制
+- **样式规范**: Less modules + antd-style
+- **API 调用**: 统一的 `callAPI` 模式
+
 ---
 
 **项目配置在 `gitee-projects.json` 中**
