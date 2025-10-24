@@ -9,15 +9,23 @@
     "production": [
       "default"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [
+      "{workspaceRoot}/openspec/AGENTS.md",
+      "{workspaceRoot}/openspec/project.md",
+      "{workspaceRoot}/openspec/specs/**/*",
+      "{workspaceRoot}/openspec/changes/**/*"
+    ]
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production", "sharedGlobals"]
     },
     "serve": {
       "dependsOn": ["build"]
+    },
+    "test": {
+      "inputs": ["default", "^production", "sharedGlobals"]
     }
   }
 }

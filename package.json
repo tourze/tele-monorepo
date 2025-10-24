@@ -9,7 +9,9 @@
     "seven-fish:static": "cd apps/seven-fish-customer-service && npm run static",
     "utc-react:start": "cd apps/utc-react && npm start",
     "utc-react:dev": "cd apps/utc-react && npm run start:dev",
-    "utc-react:build": "cd apps/utc-react && npm run build"
+    "utc-react:build": "cd apps/utc-react && npm run build",
+    "openspec:validate": "node scripts/openspec-validate.js",
+    "openspec:init": "echo 'OpenSpec already initialized. Run npm run openspec:validate to check configuration.'"
   },
   "private": true,
   "dependencies": {},
