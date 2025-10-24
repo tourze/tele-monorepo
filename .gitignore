@@ -49,3 +49,6 @@ temp/
 
 # Nx specific
 .nx/cache/
+
+# Apps sub-projects (managed by developers)
+apps/
