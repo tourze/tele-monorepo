@@ -6,124 +6,8 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "apps/seven-fish-customer-service/client/module/util/params.js",
-        "hash": "1810929593976919423"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/package.json",
-        "hash": "11314603793946851599"
-      },
-      {
-        "file": ".claude/settings.local.json",
-        "hash": "11137743721773624719"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/img/loading.gif",
-        "hash": "2378817178696764407"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/webpack/webpack.prod.js",
-        "hash": "3902677562800632152"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/img/980x600.png",
-        "hash": "17019309569443933527"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/package-lock.json",
-        "hash": "3906310644023401518"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/webpack/webpack.common.js",
-        "hash": "15338210174291146486"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/img/400x600.png",
-        "hash": "13387635944603148214"
-      },
-      {
         "file": "gitee-projects.json",
         "hash": "16744887714468662060"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/module/constants.js",
-        "hash": "17627175742186601128"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/img/212x212.png",
-        "hash": "1485963704147410666"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/css/base.less",
-        "hash": "17135591076455887839"
-      },
-      {
-        "file": "scripts/manage-gitee-projects.js",
-        "hash": "5654016981757217406"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/css/style.less",
-        "hash": "1784220727699394609"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/.gitignore",
-        "hash": "8587836968507943632"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/.babelrc",
-        "hash": "15515698274289197826"
-      },
-      {
-        "file": "graph.json",
-        "hash": "17799432784965957213"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "2135301765006510916"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/module/index.js",
-        "hash": "1034734227345320697"
-      },
-      {
-        "file": "apps/.gitkeep",
-        "hash": "1527259537488872191"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "8302247990157644130"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/yarn.lock",
-        "hash": "3061703947765432270"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/20251021七鱼客服正式环境.zip",
-        "hash": "9740306715247805074"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/img/80x80.png",
-        "hash": "9710929267851479653"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/20251015七鱼客服正式环境.zip",
-        "hash": "4669905355022751509"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/view/index.html",
-        "hash": "9664102261768075525"
-      },
-      {
-        "file": "package.json",
-        "hash": "12795960392877125201"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/README.md",
-        "hash": "9876899353540399651"
-      },
-      {
-        "file": "apps/seven-fish-customer-service/client/img/opentip.png",
-        "hash": "17685542097465010509"
       },
       {
         "file": "README.md",
@@ -131,15 +15,31 @@
       },
       {
         "file": "nx.json",
-        "hash": "7984885312398650396"
+        "hash": "16472968272130721479"
       },
       {
-        "file": "apps/seven-fish-customer-service/client/module/util/index.js",
-        "hash": "3244421341483603138"
+        "file": "package-lock.json",
+        "hash": "2135301765006510916"
       },
       {
-        "file": "apps/seven-fish-customer-service/webpack/webpack.dev.js",
-        "hash": "1414048744568361211"
+        "file": ".claude/settings.local.json",
+        "hash": "11458574404843815564"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "14178353650494525951"
+      },
+      {
+        "file": "graph.json",
+        "hash": "17799432784965957213"
+      },
+      {
+        "file": "scripts/manage-gitee-projects.js",
+        "hash": "5654016981757217406"
+      },
+      {
+        "file": "package.json",
+        "hash": "7180337461941862550"
       }
     ],
     "projectFileMap": {}

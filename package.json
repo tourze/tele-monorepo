@@ -6,7 +6,10 @@
     "gitee:clone": "node scripts/manage-gitee-projects.js clone",
     "gitee:pull": "node scripts/manage-gitee-projects.js pull",
     "gitee:sync": "node scripts/manage-gitee-projects.js sync",
-    "gitee:list": "node scripts/manage-gitee-projects.js list"
+    "gitee:list": "node scripts/manage-gitee-projects.js list",
+    "seven-fish:start": "nx serve seven-fish-customer-service",
+    "seven-fish:build": "nx build seven-fish-customer-service",
+    "seven-fish:static": "nx static seven-fish-customer-service"
   },
   "private": true,
   "dependencies": {},
