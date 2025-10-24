@@ -1,0 +1,52 @@
+{
+  "version": "6.0",
+  "nxVersion": "22.0.1",
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".claude/settings.local.json",
+        "hash": "18437553111982002206"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "8302247990157644130"
+      },
+      {
+        "file": "README.md",
+        "hash": "14217347396328986994"
+      },
+      {
+        "file": "apps/.gitkeep",
+        "hash": "1527259537488872191"
+      },
+      {
+        "file": "gitee-projects.json",
+        "hash": "7840191189150495059"
+      },
+      {
+        "file": "graph.json",
+        "hash": "17799432784965957213"
+      },
+      {
+        "file": "nx.json",
+        "hash": "7984885312398650396"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "2135301765006510916"
+      },
+      {
+        "file": "package.json",
+        "hash": "13698931581938137824"
+      },
+      {
+        "file": "scripts/manage-gitee-projects.js",
+        "hash": "10303184953668146291"
+      }
+    ],
+    "projectFileMap": {}
+  },
+  "externalNodesHash": "17814738207735190757"
+}

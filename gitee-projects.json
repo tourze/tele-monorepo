@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "example-project",
+      "giteeUrl": "https://gitee.com/user/example-project.git",
+      "branch": "master",
+      "appsDir": true
+    }
+  ],
+  "defaultAppsDir": "apps",
+  "defaultBranch": "master"
+}

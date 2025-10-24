@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-nx-workspace@latest:*)",
+      "Read(//d/**)",
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx nx graph:*)",
+      "Bash(npx nx --version:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
