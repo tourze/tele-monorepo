@@ -14,11 +14,20 @@ npm run gitee:clone https://gitee.com/umworks/utc-react.git
 
 ## 运行项目
 
-进入 `apps/` 目录下的具体项目，按照该项目的说明运行：
+进入 `apps/` 目录下的具体项目，安装依赖并运行：
 
 ```bash
 # 示例：进入项目并运行
 cd apps/your-project-name
+
+# 安装依赖
+npm install
+# 或
+pnpm install
+# 或
+yarn
+
+# 启动项目
 npm run dev
 # 或
 npm start
