@@ -23,9 +23,8 @@ cd apps/your-project-name
 # 安装依赖
 npm install
 # 或
-yarn
-# 或
-pnpm install (注意：utc-react项目不要使用pnpm)
+yarn install
+# 注意：所有子仓库都不要使用pnpm安装
 
 # 启动项目
 npm run dev
@@ -33,7 +32,7 @@ npm run dev
 npm start
 ```
 
-⚠️ **注意**：utc-react项目必须使用 `npm install` 或 `yarn install`，不要使用pnpm，否则会出现模块解析错误。
+⚠️ **注意**：所有子仓库都必须使用 `npm install` 或 `yarn install`，不要使用pnpm，否则会出现模块解析错误。
 
 ## 子仓库分支管理
 
