@@ -28,15 +28,17 @@ openspec/
 │       ├── spec.md         # WHAT and WHY
 │       └── design.md       # HOW (optional, for established patterns)
 └── changes/                # Proposed changes
-    ├── [change-name]/      # Descriptive change identifier
-    │   ├── proposal.md     # Why, what, and impact
-    │   ├── tasks.md        # Implementation checklist
-    │   ├── design.md       # Technical decisions (optional)
-    │   └── specs/          # Complete future state
-    │       └── [capability]/
-    │           └── spec.md # Clean markdown (no diff syntax)
+    ├── [project-name]/     # Project-specific changes (optional)
+    │   └── [change-name]/  # Descriptive change identifier
+    │       ├── proposal.md # Why, what, and impact
+    │       ├── tasks.md    # Implementation checklist
+    │       ├── design.md   # Technical decisions (optional)
+    │       └── specs/      # Complete future state
+    │           └── [capability]/
+    │               └── spec.md # Clean markdown (no diff syntax)
     └── archive/            # Completed changes
-        └── YYYY-MM-DD-[name]/
+        └── [project-name]/ # Project-specific archive
+            └── YYYY-MM-DD-[name]/
 ```
 
 ### Requirement: Structured Format for Behavioral Specs
@@ -163,6 +165,25 @@ The archive process SHALL programmatically apply delta changes to current specif
 - **AND** require manual resolution before proceeding
 - **AND** provide clear guidance on resolving conflicts
 
+### Requirement: Project-Based Archive Organization
+
+Completed changes SHALL be archived in project-specific directories.
+
+#### Scenario: Archiving project-specific changes
+
+- **WHEN** archiving a completed change from `openspec/changes/[project-name]/[change-name]/`
+- **THEN** move the entire change folder to `openspec/archive/[project-name]/YYYY-MM-DD-[change-name]/`
+- **AND** use the current date as YYYY-MM-DD prefix
+- **AND** maintain the same project name in the archive directory
+- **AND** preserve all files: proposal.md, tasks.md, design.md, and specs/
+
+#### Scenario: Archiving workspace-level changes
+
+- **WHEN** archiving a completed change from `openspec/changes/[change-name]/`
+- **THEN** move the entire change folder to `openspec/archive/YYYY-MM-DD-[change-name]/`
+- **AND** use the current date as YYYY-MM-DD prefix
+- **AND** place directly in the archive/ directory without project subdirectory
+
 ### Requirement: Proposal Format
 
 Proposals SHALL explicitly document all changes with clear from/to comparisons.
@@ -232,6 +253,23 @@ The system SHALL follow these principles:
 
 ## Directory Structure
 
+### Requirement: Project-Based Change Organization
+
+Change proposals SHALL be organized by project when working with multi-project workspaces.
+
+#### Scenario: Creating project-specific changes
+
+- **WHEN** creating a change proposal for a specific project
+- **THEN** organize the change under `openspec/changes/[project-name]/[change-name]/`
+- **AND** use the project name matching the apps directory (e.g., `utc-react`, `seven-fish-customer-service`)
+- **AND** maintain the same internal structure with proposal.md, tasks.md, design.md, and specs/
+
+#### Scenario: Creating workspace-level changes
+
+- **WHEN** creating a change proposal that affects the entire workspace or multiple projects
+- **THEN** organize the change directly under `openspec/changes/[change-name]/`
+- **AND** clearly document which projects are affected in the proposal.md
+
 ### Requirement: Project Structure
 
 An OpenSpec project SHALL maintain a consistent directory structure for specifications and changes.
@@ -249,15 +287,17 @@ openspec/
 │       ├── spec.md         # WHAT and WHY
 │       └── design.md       # HOW (optional, for established patterns)
 └── changes/                # Proposed changes
-    ├── [change-name]/      # Descriptive change identifier
-    │   ├── proposal.md     # Why, what, and impact
-    │   ├── tasks.md        # Implementation checklist
-    │   ├── design.md       # Technical decisions (optional)
-    │   └── specs/          # Complete future state
-    │       └── [capability]/
-    │           └── spec.md # Clean markdown (no diff syntax)
+    ├── [project-name]/     # Project-specific changes (optional)
+    │   └── [change-name]/  # Descriptive change identifier
+    │       ├── proposal.md # Why, what, and impact
+    │       ├── tasks.md    # Implementation checklist
+    │       ├── design.md   # Technical decisions (optional)
+    │       └── specs/      # Complete future state
+    │           └── [capability]/
+    │               └── spec.md # Clean markdown (no diff syntax)
     └── archive/            # Completed changes
-        └── YYYY-MM-DD-[name]/
+        └── [project-name]/ # Project-specific archive
+            └── YYYY-MM-DD-[name]/
 ```
 
 ## Specification Format
@@ -388,6 +428,25 @@ The archive process SHALL programmatically apply delta changes to current specif
 - **AND** require manual resolution before proceeding
 - **AND** provide clear guidance on resolving conflicts
 
+### Requirement: Project-Based Archive Organization
+
+Completed changes SHALL be archived in project-specific directories.
+
+#### Scenario: Archiving project-specific changes
+
+- **WHEN** archiving a completed change from `openspec/changes/[project-name]/[change-name]/`
+- **THEN** move the entire change folder to `openspec/archive/[project-name]/YYYY-MM-DD-[change-name]/`
+- **AND** use the current date as YYYY-MM-DD prefix
+- **AND** maintain the same project name in the archive directory
+- **AND** preserve all files: proposal.md, tasks.md, design.md, and specs/
+
+#### Scenario: Archiving workspace-level changes
+
+- **WHEN** archiving a completed change from `openspec/changes/[change-name]/`
+- **THEN** move the entire change folder to `openspec/archive/YYYY-MM-DD-[change-name]/`
+- **AND** use the current date as YYYY-MM-DD prefix
+- **AND** place directly in the archive/ directory without project subdirectory
+
 ### Requirement: Proposal Format
 
 Proposals SHALL explicitly document all changes with clear from/to comparisons.
@@ -417,7 +476,7 @@ The change process SHALL follow these states:
 4. **Implement**: Follow tasks.md checklist (can span multiple PRs)
 5. **Deploy**: Changes are deployed to production
 6. **Update**: Specs in `specs/` are updated to match deployed reality
-7. **Archive**: Change is moved to `archive/YYYY-MM-DD-[name]/`
+7. **Archive**: Change is moved to `archive/[project-name]/YYYY-MM-DD-[name]/`
 
 ## Viewing Changes
 

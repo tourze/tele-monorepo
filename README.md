@@ -137,25 +137,34 @@ npm run openspec:validate  # 检查是否符合规范
 
 **1️⃣ 创建提案目录**
 ```bash
-mkdir -p openspec/changes/你的功能名称
+# 针对特定项目的提案
+mkdir -p openspec/changes/项目名/功能名称
+
+# 工作区级别的提案
+mkdir -p openspec/changes/功能名称
 ```
 
 **2️⃣ 创建3个必要文件**
 ```bash
+# 针对特定项目的提案
 # 提案说明 (为什么要做这个功能)
-touch openspec/changes/你的功能名称/proposal.md
+touch openspec/changes/项目名/功能名称/proposal.md
 
 # 任务清单 (具体要做哪些事)
-touch openspec/changes/你的功能名称/tasks.md
+touch openspec/changes/项目名/功能名称/tasks.md
 
 # 规范变更 (需要修改哪些规范)
-mkdir -p openspec/changes/你的功能名称/specs/react-standards
-touch openspec/changes/你的功能名称/specs/react-standards/spec.md
+mkdir -p openspec/changes/项目名/功能名称/specs/react-standards
+touch openspec/changes/项目名/功能名称/specs/react-standards/spec.md
+
+# 工作区级别的提案 (文件路径类似，只是少了项目名层级)
 ```
 
 **3️⃣ 验证提案**
 ```bash
-openspec validate 你的功能名称
+openspec validate 项目名/功能名称
+# 或
+openspec validate 功能名称
 ```
 
 #### 📋 提案模板 (复制使用)
@@ -184,6 +193,33 @@ openspec validate 你的功能名称
 ## 2. 测试验证
 - [ ] 2.1 测试功能
 - [ ] 2.2 openspec validate 检查
+
+## 3. 归档 (实施完成后)
+- [ ] 3.1 移动到 openspec/archive/项目名/YYYY-MM-DD-功能名称/
+```
+
+### 📁 提案归档机制
+
+实施完成后，提案需要归档以保持changes目录的整洁：
+
+**手动归档**:
+```bash
+# 针对特定项目的提案
+mv openspec/changes/项目名/功能名称 openspec/archive/项目名/$(date +%Y-%m-%d)-功能名称
+
+# 工作区级别的提案
+mv openspec/changes/功能名称 openspec/archive/$(date +%Y-%m-%d)-功能名称
+```
+
+**归档目录结构**:
+```
+openspec/archive/
+├── utc-react/
+│   ├── 2025-10-27-功能名称1/
+│   └── 2025-10-27-功能名称2/
+├── seven-fish-customer-service/
+│   └── 2025-10-27-功能名称3/
+└── 2025-10-27-工作区功能名称/
 ```
 
 ### 🚨 重要提醒
