@@ -59,3 +59,13 @@ temp/
 # Apps directory - ignore all subdirectories except .gitkeep
 apps/*/
 !apps/.gitkeep
+
+# OpenSpec temporary files
+openspec/changes/
+!openspec/changes/.gitkeep
+
+# Keep specs and archive in version control
+!openspec/specs/
+!openspec/archive/
+!openspec/AGENTS.md
+!openspec/project.md

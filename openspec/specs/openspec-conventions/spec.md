@@ -211,7 +211,7 @@ The system SHALL support multiple methods for reviewing proposed changes.
 
 - **WHEN** reviewing proposed changes
 - **THEN** reviewers can compare using:
-- GitHub PR diff view when changes are committed
+- Gitee PR diff view when changes are committed
 - Command line: `diff -u specs/[capability]/spec.md changes/[name]/specs/[capability]/spec.md`
 - Any visual diff tool comparing current vs future state
 
@@ -488,7 +488,7 @@ The system SHALL support multiple methods for reviewing proposed changes.
 
 - **WHEN** reviewing proposed changes
 - **THEN** reviewers can compare using:
-- GitHub PR diff view when changes are committed
+- Gitee PR diff view when changes are committed
 - Command line: `diff -u specs/[capability]/spec.md changes/[name]/specs/[capability]/spec.md`
 - Any visual diff tool comparing current vs future state
 
