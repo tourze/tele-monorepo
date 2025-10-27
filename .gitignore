@@ -55,3 +55,7 @@ temp/
 
 # Claude Code specific
 .claude/settings.local.json
+
+# Apps directory - ignore all subdirectories except .gitkeep
+apps/*/
+!apps/.gitkeep
