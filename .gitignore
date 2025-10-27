@@ -49,6 +49,9 @@ temp/
 
 # Nx specific
 .nx/cache/
+.nx/workspace-data/
+.nx/workspace-data/source-maps.json
+.nx/workspace-data/d/server-process.json
 
-# Apps sub-projects (managed by developers)
-apps/
+# Claude Code specific
+.claude/settings.local.json
