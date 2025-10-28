@@ -148,3 +148,27 @@ git log --oneline  # 查看提交历史
 
 ---
 **项目配置在 `gitee-projects.json` 中**
+
+
+## AGENTS使用例子
+如何实现“根据 AGENTS 生成需求 xxxx”
+为了让 Claude 在你说“根据 AGENTS 生成需求 xxxx”时生成符合需求的代码，需确保以下步骤：
+
+AI 工具配置：
+
+确保 Claude 或其他 AI 工具（如 Cursor、Gemini CLI）支持读取 AGENTS.md 文件（OpenSpec 文档提到 Amp、Jules 等工具兼容 AGENTS.md）。
+如果 Claude 未自动加载 AGENTS.md，可手动提示：
+textClaude, read the AGENTS.md files in the project root and apps/utc-react/, then generate code for demand xxxx based on the RCCA template.
+
+
+
+结构化 RCCA 模板：
+
+根目录和子项目的 RCCA 模板已优化，包含明确的 Role、Context、Constraint 和 Action，Claude 可直接解析。
+示例提示：
+text根据 AGENTS 生成需求：为 utc-react 添加一个用户管理页面，包含搜索和分页功能。
+Claude 将：
+
+读取根目录 AGENTS.md 的通用规则（单引号、无分号、zod 校验）。
+读取 apps/utc-react/AGENTS.md 的上下文（UmiJS、Ant Design、Less modules）。
+根据 Role: UmiJS 页面生成者 生成类型安全的 React 页面代码。
