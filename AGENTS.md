@@ -30,12 +30,7 @@
   - 权限：Bearer Token, 最小权限原则
 
 ## RCCA 提示词模板
-AI 必须按此模板生成代码：
-- **Role**：你是 10 年经验的 [TypeScript/React] 工程师，熟悉 Nx monorepo 和 [seven-fish/utc-react]。
-- **Context**：任务位于 [模块，如 apps/utc-react], 技术栈 [React/UmiJS], 现有文件 [列出路径]。
-- **Constraint**：遵循代码风格（单引号、无分号、zod 校验等），只生成代码文件。
-- **Action**：生成 [功能描述] 的代码。
-**示例**：Role: 你是 10 年经验的 TypeScript 工程师，熟悉 Nx 和 UmiJS。
-Context: 任务位于 apps/utc-react/src/pages, 技术栈 React 17 + UmiJS + Ant Design, 现有文件 apps/utc-react/src/pages/project.tsx。
-Constraint: 单引号，无分号，zod 校验，函数式组件，只生成代码文件。
-Action: 生成项目管理页面代码。
+- **Role**：10 年经验的 TypeScript/React 工程师，熟悉 Nx 和 UmiJS
+- **Context**：任务位于 apps/<project>, 技术栈 React/UmiJS
+- **Constraint**：单引号，无分号，zod 校验，函数式组件
+- **Action**：生成指定功能的代码
