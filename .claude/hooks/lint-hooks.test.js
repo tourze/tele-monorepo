@@ -125,6 +125,30 @@ function testEslintFailureWithStub() {
   assert.ok(result.stderr.includes('Fake ESLint error'), '错误信息应包含 ESLint 假错误输出');
 }
 
+function testMarkdownLintWarning() {
+  const dir = createTempDir('lint-markdown-');
+  const filePath = path.join(dir, 'warn.md');
+  fs.writeFileSync(filePath, '#标题\n正文\n'); // 刻意违反常见规则
+
+  const markdownlintBin = path.join(dir, 'markdownlint');
+  fs.writeFileSync(
+    markdownlintBin,
+    '#!/usr/bin/env bash\necho "Fake markdownlint warning" >&2\nexit 1\n',
+    { mode: 0o755 },
+  );
+
+  const result = runHook('lint-markdown.js', createPayload(filePath), {
+    env: {
+      ...process.env,
+      MARKDOWNLINT_BIN: markdownlintBin,
+    },
+  });
+
+  assert.strictEqual(result.status, 0);
+  assert.ok(result.stderr.includes('MarkdownLint 提示'), '应输出 MarkdownLint 提示文案');
+  assert.ok(result.stderr.includes('Fake markdownlint warning'), '应包含 markdownlint 命令输出');
+}
+
 function runTests() {
   const tests = [
     ['PHP lint 失败', testPhpLintFailure],
@@ -133,6 +157,7 @@ function runTests() {
     ['JSON lint 失败', testJsonLintFailure],
     ['ESLint 缺少配置自动跳过', testEslintSkipWithoutConfig],
     ['ESLint stub 失败', testEslintFailureWithStub],
+    ['Markdown lint 产生告警但不阻断', testMarkdownLintWarning],
   ];
 
   for (const [name, fn] of tests) {
@@ -142,4 +167,3 @@ function runTests() {
 }
 
 runTests();
-

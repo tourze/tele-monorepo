@@ -10,10 +10,10 @@
     "openspec:init": "echo 'OpenSpec already initialized. Run npm run openspec:validate to check configuration.'"
   },
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "@nx/js": "22.0.1",
     "@nx/workspace": "22.0.1",
+    "markdownlint-cli": "^0.45.0",
     "nx": "22.0.1"
   }
 }
