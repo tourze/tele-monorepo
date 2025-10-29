@@ -1,0 +1,103 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(git:*)",
+      "Bash(bin/console:*)",
+      "Bash(tree:*)",
+      "Bash(touch:*)",
+      "Bash(mkdir:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(xargs:*)",
+      "Bash(sort:*)",
+      "Bash(php:*)",
+      "Bash(node:*)",
+      "Bash(true)",
+      "Bash(chmod:*)",
+      "Bash(cat:*)",
+      "Bash(od:*)",
+      "Bash(python3:*)",
+      "Bash(./vendor/bin/phpstan:*)",
+      "Bash(./vendor/bin/phpunit:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh api:*)",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(composer install:*)",
+      "Bash(composer update:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(perl:*)",
+      "Bash(killall:*)",
+      "Bash(brew:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/llmignore.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": []
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/phpstan-require-path.php"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/lint-php.js"
+          },
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/lint-python.js"
+          },
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/lint-bash.js"
+          },
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/lint-json.js"
+          },
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/lint-eslint.js"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./.claude/hooks/force-think.js"
+          }
+        ]
+      }
+    ]
+  }
+}
