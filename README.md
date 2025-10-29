@@ -2,6 +2,14 @@
 
 基于 Nx 的开发环境，用于管理多个 Gitee 项目。
 
+## 安装
+
+执行：
+
+```shell
+npm add --global nx
+```
+
 ## 克隆项目
 
 ```bash
