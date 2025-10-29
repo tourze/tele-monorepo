@@ -1,0 +1,331 @@
+---
+description: 批量修复指定路径的代码质量问题，直至质量门通过并生成可提交变更。
+allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
+argument-hint: [path] [--strict] [--dry-run] [--output <file>]
+version: v4.3
+lastUpdated: 2026-01-10
+---
+
+## 参数
+
+- **必填**：`path`（包/模块目录，缺省为当前目录）。
+- **可选**：`--strict`（禁止未知旗标）、`--dry-run`（仅分析不改动）、`--output <file>`（输出报告）。
+- 命令目标必须可运行质量门；禁止跨仓库或全仓扫描。
+
+## 提交范围限制
+
+- 仅允许提交 `path` 指向的当前工作目录改动，不得跨出该目录。
+- 禁止一次执行同时覆盖多个项目、包或服务；若确需处理多目录，必须拆分为多次调用 `fix-code` 并分别提交。
+- 如发现提交内容跨目录，应立即终止操作，拆分提交，并在 Runbook 记录原因与处理动作。
+
+## 分支与工作区约束
+
+- 禁止在流程中执行任何 `git checkout`、`git switch` 或其他切换/创建分支的命令，固定在当前分支上完成操作。
+- 禁止使用 `git stash`（含 `git stash push/pop/apply/drop` 等变体）或其他会隐式改写工作区状态的快捷命令。
+- 如需调整分支或使用 stash，由用户自行在线下完成，自动化指令不触发这些动作。
+
+## 加载技能
+
+### 必须加载的技能
+- @.claude/skills/method/code-fix-loop/SKILL.md ：统一“定位 → 分析 → 修复 → 回归 → 复盘”流程，并指引与语言/工具技能衔接。
+- @.claude/skills/scenario/quality-gates/SKILL.md ：格式、静态分析、测试、依赖、构建的执行顺序与记录模板。
+- @.claude/skills/method/nplus1-guardian/SKILL.md 、 @.claude/skills/method/security-baseline/SKILL.md：在修复过程中守住性能与安全红线。
+- @.claude/skills/tool/git-auto-commit/SKILL.md ：在质量门通过后执行自动暂存与提交，并记录验证命令。
+- @.claude/skills/method/parallel-task-coordination/SKILL.md ：默认开启并行拆解，指导子代理协作与任务并发执行。
+
+### 按需加载的技能
+- `.claude/skills/method/state-machine-visualizer/SKILL.md`（可选）：结合 `/stm-dump` 复盘修复状态机。
+- `.claude/skills/scenario/codex-mcp-collaboration/SKILL.md`：遇到棘手问题或高不确定性决策时，构造上下文与 Codex 协作。
+- 语言/工具类技能按需加载到批处理步骤中。不限于下面的列表：
+  - `.claude/skills/tool/php-phpstan/SKILL.md`
+  - `.claude/skills/tool/php-phpunit/SKILL.md`
+  - `.claude/skills/tool/js-eslint/SKILL.md`
+
+请一定根据实际业务需要，主动加载 SKILL。
+
+## 执行节奏与自驱校验
+
+- 规划步骤或 Todo 的同一轮必须调用 `update_plan` 并立即执行首个动作，产出可复核证据（命令输出、代码 diff 等）；禁止停留在"等待确认"状态。
+- **测试基线建立**：修复前先运行目标测试建立基线，记录初始状态（通过/失败/跳过），修复后对比基线，确认改动仅修复预期问题且无回归。
+- **集成基线约束**：当 PHPStan 或质量门指定需要集成测试验证时，必须执行对应集成测试套件；禁止以单元测试替代，并在记录中保留命令与结果。
+- **并行协作默认启用**：识别到多个问题或批次时，需立即创建子代理或多任务并行推进，除非命中阻塞条件；同步记录分工与完成状态。
+- **不得遗漏问题**：扫描、分析或验证中发现的新问题必须纳入当前批次闭环解决，不得搁置或等待额外指令；Runbook 中同步登记处理情况。
+- **0错误标准**：所有PHPStan报告的错误都必须修复，包括复杂度警告（complexity.functionLike）、嵌套循环警告（symplify.foreachCeption）等；验收标准为 `[OK] No errors`，禁止以"非阻塞性"为由遗留任何错误。
+- **复杂度问题处理**：遇到复杂度超限时，必须通过方法重构、逻辑拆分等方式解决，而非跳过或标记为警告；重构时需确保类型安全，避免引入新的argument.type错误。
+- **棘手问题协作优先**：连续两轮尝试仍无法收敛时，先调用 `scenario-codex-mcp-collaboration` 协议与 Codex 协作，验证建议后再行动；协作无效时方可登记 GitHub Issue 作为最终兜底。
+- 除非命中阻塞条件，下一个动作应直接衔接上一动作完成后的同一轮；阻塞条件仅限下表列出的情形，命中任一项需同步说明并给出解法或请求支援。
+
+| 阻塞条件 | 处理要求 |
+| --- | --- |
+| 缺失关键信息导致质量门不可定义 | 记录已尝试的默认策略，明确需要的额外信息后再提问 |
+| 工具或权限受限无法执行必需命令 | 说明失败命令、错误信息与备选方案，评估是否暂停 |
+| 识别到安全/性能红线风险 | 立即调用对应技能或上报，待确认后再推进 |
+| 用户显式请求暂停或切换话题 | 备注原因，等待新指令 |
+
+- 无阻塞时需持续“计划→执行→验证”的闭环；每轮都要汇报当次实际执行的命令与结果摘要，缺少证据视为未完成。
+- 默认兜底策略：信息不足时先按 `path` 运行质量门（如 `phpstan`、集成测试）；若仍失败，再回报缺口并请求指导。
+- 遇到冲突优先确保业务正确，如需权衡需备注依据与影响评估。
+
+## 流程概览
+
+1. **定位与分级**：调用 @.claude/skills/method/code-fix-loop/SKILL.md 识别业务影响、收集日志/复现脚本，并在当轮输出 Todo 与首个执行动作。
+2. **根因分析**：在定位证据基础上对照历史提交、配置与监控，必要时加载语言/框架技能辅助推理。
+3. **批次划分**（推荐）：
+   - **问题数量 10-50**：按错误类型分组（类型声明、测试、复杂度等），顺序执行或小规模并行（2-3 个任务）
+   - **问题数量 > 50**：使用 @.claude/skills/method/parallel-task-coordination/SKILL.md 指导批次划分
+   - **问题数量 > 100** 或**复杂度高**：与 Codex MCP 协作制定批次策略（参考 @.claude/skills/scenario/codex-mcp-collaboration/SKILL.md 的"批次划分模板"）
+   - 参考下方"批次化修复策略示例"
+4. **修复批次**：根据根因拆分批次，调用语言/工具技能执行变更，记录命令与输出，自愈次数不超过 3 次；`php-cs-fixer` 仅用于最终收口。
+5. **回归验证**：按 @.claude/skills/scenario/quality-gates/SKILL.md 规划的质量门逐项验证，若静态分析导致测试失败，优先修正测试逻辑。
+6. **复盘与提交**：总结修复要点、残留风险，必要时登记例外卡，再次运行完整质量门；满足条件后按 @.claude/skills/tool/git-auto-commit/SKILL.md 自动提交并记录验证命令。
+
+> 如果有任务还在后台运行未结束，则不能进入复盘阶段，必须等待执行完成。
+
+## 自动提交策略
+
+- 自动提交默认开启：脚本会在质量门通过且工作区干净时自动执行 `git add --all` 与约定格式的 `git commit`。
+- 环境变量：
+  - `FIX_CODE_AUTO_COMMIT=0|false`：禁用自动提交，仅输出补丁与提交信息草案。
+  - `FIX_CODE_ALLOW_DIRTY=1`：允许在存在其他未提交改动的前提下运行，但需在 Runbook 记录风险。
+- 若仓库缺失 `.git` 或自动提交流程失败，需提示人工执行 `git-auto-commit` 技能中的命令。
+
+## 产出
+
+- 批次计划、执行记录与质量门日志（建议使用 `--output` 存档）。
+- 自动生成的提交记录（含提交信息与验证命令）；如禁用自动提交需附补丁与手动提交指引。
+- 遗留风险、待处理债务或建议的后续工作。
+
+## 批次化修复策略示例
+
+当面对大量存量质量问题（> 50 个错误）时，推荐使用批次化策略。以下是经过实战验证的模板。
+
+### 示例：修复 118 个 PHPStan level=max 错误
+
+**问题分类**：
+- 依赖声明：1 个
+- 风格问题：8 个（empty()、短三元）
+- 弃用 API：13 个
+- 类型问题：18 个
+- 复杂度：7 个文件
+- 测试覆盖：若干
+
+**批次划分**：
+```
+批次一：基础依赖与风格治理（并行度 2）
+  - 任务A：补齐依赖声明 ✅ 可并行
+  - 任务B：风格治理（empty、短三元）✅ 可并行
+  - 验证：composer validate + php-cs-fixer
+  - 风险：低
+
+批次二：类型声明与弃用 API 更替（并行度 2）
+  - 任务A：弃用 API 更替（isSubclassOf → isSubclassOfClass）✅ 可并行
+  - 任务B：类型声明修复（三元条件、返回类型、PHPDoc）✅ 可并行
+  - ⚠️ 重要：同步检查错误标识符规范（禁止下划线）
+  - 验证：PHPStan 核心规则检查
+  - 风险：中
+
+批次三：复杂度与结构重构（串行/部分并行）
+  - 优先级 1：ControllerTestRule（类复杂度 65）❌ 串行，高风险
+  - 优先级 2：BatchActionTestRule（递归复杂度）❌ 串行，高风险
+  - 优先级 3-7：其他 5 个文件 ✅ 可并行，风险较低
+  - 验证：每个文件修改后立即运行对应测试
+  - 风险：高
+
+批次四：规则覆盖测试补齐（可选）
+  - 评估测试覆盖率，补充缺失测试
+  - 验证：PHPUnit 覆盖率报告
+  - 风险：中
+
+批次五：最终校准与消息断言更新（串行）
+  - 更新测试断言期望以匹配新的输出格式
+  - 执行完整质量门验证
+  - 验证：所有测试通过，PHPStan 错误数符合预期
+  - 风险：低
+```
+
+**执行结果**：
+- PHPStan 错误：118 → 73（-38%）
+- 测试失败：18 → 14（-22%）
+- 并行效率提升 ~40%（批次一、二）
+- 无冲突，无返工
+
+### 批次化策略关键原则
+
+1. **依赖关系分析**
+   - **无依赖** = 可并行（如依赖声明 ⊥ 风格治理）
+   - **弱依赖** = 可并行但需最终合并验证（如弃用 API ⊥ 类型声明）
+   - **强依赖** = 必须串行（如风格 → 类型 → 复杂度）
+
+2. **并行度控制**
+   - 2 个任务：简单、无依赖场景
+   - 3-4 个任务：中等复杂度、明确边界
+   - > 4 个任务：需评估冲突风险
+
+3. **风险分级**
+   - **低风险**：风格、依赖声明（可大胆并行）
+   - **中风险**：类型修复、弃用 API（可并行，需验证）
+   - **高风险**：复杂度重构、架构调整（必须串行或小心并行）
+
+4. **验证节奏**
+   - 每批次完成后立即验证
+   - 不要等所有批次完成才验证
+   - 高风险批次：每个文件修改后立即验证
+
+5. **与 Codex MCP 协作**
+   - 问题数 > 100：使用"批次划分模板"向 Codex 咨询策略
+   - 复杂度重构：使用"复杂度重构模板"获取具体建议
+   - 不确定性 > 20%：主动协作，避免返工
+
+### 常见批次划分模式
+
+**模式 1：存量质量问题治理**
+```
+批次一：基础设施（依赖、配置）
+批次二：代码风格（格式、命名、惯用法）
+批次三：类型系统（类型声明、泛型、PHPDoc）
+批次四：结构优化（复杂度、重复代码、架构）
+批次五：测试与验证（补充测试、更新断言）
+```
+
+**模式 2：框架/语言版本升级**
+```
+批次一：依赖升级（composer update、兼容性检查）
+批次二：弃用 API 更替（全局搜索替换）
+批次三：类型系统适配（新增严格类型、返回类型）
+批次四：测试修复（Mock、断言、测试配置）
+批次五：性能优化与清理（移除兼容代码）
+```
+
+**模式 3：新规则引入**
+```
+批次一：规则配置与基线建立
+批次二：自动修复（格式化、简单类型）
+批次三：手动修复（复杂逻辑、重构）
+批次四：测试补充（覆盖新规则检查点）
+批次五：基线清理与 CI 配置
+```
+
+**模式 4：中小规模修复（10-50 个错误）**
+```
+批次一：快速清理（低风险，可并行 2-3 个任务）
+  - 类型声明（为参数/返回值添加 PHPDoc）
+  - offsetAccess 检查（添加 assertNotNull/assertArrayHasKey）
+  - 杂项修复（DocBlock 位置、继承问题等）
+
+批次二：测试巩固（中等风险，顺序执行）
+  - 复杂度重构（提取私有方法降低复杂度）
+  - 测试补充（必填字段验证、自定义动作测试）
+
+批次三：服务层测试（中等成本）
+  - 单元测试补充（Extension、Service 等）
+  - 集成测试（可选，评估成本后决定）
+```
+
+### 测试失败修复常见模式
+
+基于实战经验，以下是测试失败的常见问题和解决方案：
+
+#### EasyAdmin 测试
+
+**模式 1：表单选择器错误**
+- **症状**：`Unreachable field "EntityName"` 或 `InvalidArgumentException`
+- **根因**：使用 `$crawler->filter('form')->first()` 选择了搜索表单而非编辑表单
+- **解决**：使用表单 name 属性选择器
+  ```php
+  // ❌ 错误：选择第一个表单
+  $form = $crawler->filter('form')->first()->form();
+
+  // ✅ 正确：使用 name 属性
+  $form = $crawler->filter('form[name="EntityName"]')->form();
+  ```
+
+**模式 2：验证错误触发**
+- **症状**：期望 422 状态码，实际返回 200
+- **根因**：必填字段未清空，或值被转换为 null 导致 setter 类型错误
+- **解决**：使用无效值而非空值
+  ```php
+  // ❌ 可能失败：空值被转换为 null
+  $form->setValues(['EntityName[field]' => '']);
+
+  // ✅ 推荐：使用明确无效的值
+  $form->setValues(['EntityName[url]' => 'not-a-valid-url']);
+  ```
+
+#### Symfony 测试
+
+**模式 1：客户端注册缺失**
+- **症状**：`A client must be set to make assertions on it`
+- **根因**：`createClient()` 未注册到静态缓存
+- **解决**：手动注册客户端
+  ```php
+  $client = self::createClient();
+  self::getClient($client); // 手动注册
+  $client->request($method, $url);
+  $this->assertResponseStatusCodeSame(200);
+  ```
+
+**模式 2：DataProvider 迁移（PHPUnit 10+）**
+- **症状**：PHPStan 错误或测试验证失败
+- **根因**：使用旧版 `@dataProvider` 注解
+- **解决**：迁移到 `#[DataProvider]` 属性
+  ```php
+  // ❌ PHPUnit 9 风格
+  /** @dataProvider provideTestData */
+  public function testSomething($data): void
+
+  // ✅ PHPUnit 10+ 风格
+  #[DataProvider('provideTestData')]
+  public function testSomething($data): void
+  ```
+
+**模式 3：重定向缺失 EasyAdmin 上下文**
+- **症状**：`AdminContext::getEntity(): Return value must be of type EntityDto, null returned`
+- **根因**：使用 `generateUrl()` 生成重定向 URL，缺失 EasyAdmin 上下文
+- **解决**：优先使用 referer
+  ```php
+  // ✅ 使用 referer 保留完整上下文
+  private function redirectToIndex(): Response
+  {
+      $referer = $this->adminContextProvider->getContext()?->getRequest()?->headers->get('referer');
+      if ($referer) {
+          return $this->redirect($referer);
+      }
+      return $this->redirectToRoute('admin', ['crudAction' => 'index', ...]);
+  }
+  ```
+
+### 测试失败诊断清单
+
+遇到测试失败时，按以下顺序快速排查：
+
+1. **表单选择器**（EasyAdmin 测试）
+   - [ ] 是否使用了 `form[name="EntityName"]` 选择器？
+   - [ ] 表单字段名是否正确？
+
+2. **客户端注册**（Symfony 测试）
+   - [ ] 使用 `createClient()` 后是否调用 `self::getClient($client)`？
+   - [ ] 断言方法是否依赖静态客户端？
+
+3. **DataProvider 迁移**
+   - [ ] 是否使用了 `#[DataProvider]` 属性而非 `@dataProvider` 注解？
+   - [ ] DataProvider 方法是否为 `static`？
+
+4. **路由配置**
+   - [ ] 测试环境是否加载了所需路由？
+   - [ ] 是否需要接受 404 或 405 状态码？
+
+5. **类型安全**
+   - [ ] 表单值是否会被转换为 null？
+   - [ ] setter 是否要求非 null 类型？
+
+**使用建议**：
+- 第 1 次失败：按清单快速排查
+- 第 2 次失败：启动 Codex MCP 协作（使用"测试失败诊断模板"）
+- 第 3 次失败：升级问题，寻求人工支援
+
+## 异常处理
+
+- 质量门不可达：记录环境限制，必要时暂停并请求资源支持。
+- 静态分析修复导致测试失败：优先适配测试，严禁回退修复（参见语言/工具技能中的最佳实践）。
+- 自愈失败或出现高风险问题：升级讨论，必要时结合 `method/context-snapshot` 输出现状摘要后终止。
+- 批次执行冲突：参考 `method/parallel-task-coordination` 冲突处理策略，必要时降低并行度。

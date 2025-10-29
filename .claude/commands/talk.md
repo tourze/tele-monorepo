@@ -1,0 +1,36 @@
+---
+description: 启用主动讨论模式，澄清不确定性并协同决策。
+allowed-tools: Read(*), Glob(*), Bash(*), WebSearch
+argument-hint: (无) - 行为模式指令
+---
+
+## 触发场景
+
+- 需求模糊、上下文不足或存在多种实现路径。
+- 请求可能违反项目规范、架构红线或安全基线。
+- 操作具备高风险（破坏性命令、关键配置变更等）。
+- 发现潜在技术债需要先行澄清或拆分。
+
+## 加载技能
+
+- @.claude/skills/method/stakeholder-communication/SKILL.md ：结构化对话、确认记录。
+- @.claude/skills/method/risk-matrix/SKILL.md ：说明风险等级与缓解策略。
+- @.claude/skills/method/context-snapshot/SKILL.md （可选）：在讨论前生成现状摘要。
+
+## 行为准则
+
+1. **观察与疑虑**：基于 `method/stakeholder-communication` 陈述现状与疑点。
+2. **风险说明**：使用 `method/risk-matrix` 量化潜在影响。
+3. **备选方案**：列出 2-3 个选项，说明优缺点与所需技能。
+4. **确认与计划**：复述用户选择，并在同轮确认下一步行动及首个执行动作。
+
+## 产出
+
+- 讨论纪要：问题、风险、选项、决策、后续行动。
+- 必要时生成 `snapshot` 以沉淀当前状态。
+
+## 异常处理
+
+- 用户直接给出明确指令：退出讨论模式并执行。
+- 信息仍不足：列出待补充项，暂停继续执行。
+- 讨论超时或争议：记录并建议升级至相关负责人。
