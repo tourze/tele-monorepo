@@ -12,17 +12,17 @@ argument-hint: [CRD.md] [--strict] [--dry-run] [--output <file>]
 
 ## 加载技能
 
-- @.claude/skills/scenario/feature-execution/SKILL.md ：提供通用的特性实施状态机和流程。
-- @.claude/skills/scenario/frontend-execute/SKILL.md ：补充前端特有的实现步骤和质量门。
-- @.claude/skills/scenario/quality-gates/SKILL.md : 定义前端质量门的执行顺序。
-- 语言与工具技能: `language/js-*`, `tool/js-*`, `tool/ts-*`。
+- `scenario-feature-execution` ：提供通用的特性实施状态机和流程。
+- `scenario-frontend-execute` ：补充前端特有的实现步骤和质量门。
+- `scenario-quality-gates` : 定义前端质量门的执行顺序。
+- 语言与工具技能: `js-frontend-react`、`js-react-hooks`、`js-react-state-management`、`js-frontend-presentation`、`js-tool-prettier`、`js-tool-eslint`、`ts-tool-tsc`、`js-tool-vitest`、`js-tool-vite-bundler`。
 
 ## 流程概览
 
 1. **解析 CRD**：加载任务分解、Props/State 契约、a11y/性能要求，并建立执行队列。
 2. **按批实施**：结合语言/工具技能完成组件、Hooks、样式等实现，每个批次结束即运行对应质量门。
-3. **自愈与升级**：失败时参考 `scenario/frontend-delivery` 的自愈规则（≤3 次）；涉及架构冲突时暂停请求决策。
-4. **终态校验**：全部任务完成后再次运行 `scenario/quality-gates` 全套命令，并产出执行报告。
+3. **自愈与升级**：失败时参考 `scenario-feature-execution` 的自愈规则（≤3 次）；涉及架构冲突时暂停请求决策。
+4. **终态校验**：全部任务完成后再次运行 `scenario-quality-gates` 全套命令，并产出执行报告。
 
 ## 产出
 

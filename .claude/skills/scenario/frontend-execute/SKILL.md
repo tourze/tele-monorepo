@@ -13,14 +13,14 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 前置准备
 
-- 已获得 `scenario/feature-execution` 的任务拆解、时间表与质量门清单。
+- 已获得 `scenario-feature-execution` 的任务拆解、时间表与质量门清单。
 - 阅读对应 CRD，确认组件 API、状态流、可访问性与视觉要求；记录疑问并同步设计/后端。
 - 准备前端开发环境：Node.js 版本、包管理器、Lint/测试工具、Storybook 等设施。
 - 对齐数据契约与模拟方案（Mock、Playwright fixture），确保离线可验证。
 
 ## 与通用实施的关系
 
-本技能遵循 `scenario/feature-execution` 的核心状态机（解析 → 预检 → 执行 → 质量门 → 报告），但在“执行”和“质量门”阶段应用前端专属技能。
+本技能遵循 `scenario-feature-execution` 的核心状态机（解析 → 预检 → 执行 → 质量门 → 报告），但在“执行”和“质量门”阶段应用前端专属技能。
 
 ## 操作步骤
 
@@ -28,17 +28,17 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
    - 对照 CRD 的组件树与状态图，划分开发子任务并在任务板登记。
    - 核对依赖环境、基础设施（Mock 服务、Storybook）能否运行，缺失时先补齐。
 2. **组件与逻辑实现**
-   - 参照 `language/js-frontend-react`、`language/js-react-hooks` 实现组件与复用逻辑。
-   - 依据 `language/js-react-state-management` 接入全局状态、服务端数据与缓存策略。
+   - 参照 `js-frontend-react`、`js-react-hooks` 实现组件与复用逻辑。
+   - 依据 `js-react-state-management` 接入全局状态、服务端数据与缓存策略。
 3. **样式与可访问性**
-   - 引用 `language/js-frontend-presentation`，实现设计系统、主题切换、a11y 属性。
+   - 引用 `js-frontend-presentation`，实现设计系统、主题切换、a11y 属性。
    - 通过视觉回归（Chromatic/Storybook）验证关键组件的表现一致性。
 4. **质量门执行**
-   - 在 `scenario/quality-gates` 流程下，执行前端质量门：
-     - 格式：`tool/js-prettier`
-     - 静态分析：`tool/js-eslint`、`tool/ts-tsc`
-     - 测试：`tool/js-vitest`（单元/组件/集成）或 Playwright（如需端到端）
-     - 构建：`tool/js-vite-bundler`
+   - 在 `scenario-quality-gates` 流程下，执行前端质量门：
+     - 格式：`js-tool-prettier`
+     - 静态分析：`js-tool-eslint`、`ts-tool-tsc`
+     - 测试：`js-tool-vitest`（单元/组件/集成）或 Playwright（如需端到端）
+     - 构建：`js-tool-vite-bundler`
 5. **同步与交付**
    - 更新图表、CRD 附录或设计文档，记录实现偏差与原因。
    - 在总结中说明质量门结果、性能指标、已知风险与后续观察项。

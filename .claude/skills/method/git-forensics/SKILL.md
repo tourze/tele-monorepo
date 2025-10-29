@@ -32,7 +32,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
    - 使用 `git diff`、`--stat`、`--name-only` 获取变更概览。
    - 聚焦高风险文件（核心逻辑、安全关键）。
 4. **快照与比较**
-   - 结合 `method/context-snapshot` 保存会话状态，便于重现。
+   - 结合 `method-context-snapshot` 保存会话状态，便于重现。
    - 对比多个快照或标签，识别配置/依赖差异。
 5. **总结与沟通**
    - 汇总关键发现、风险、后续建议，可生成结构化报告。

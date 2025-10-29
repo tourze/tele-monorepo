@@ -12,18 +12,18 @@ argument-hint: <issue-id|url> [--path <dir>] [--strict] [--dry-run] [--output <f
 
 ## 加载技能
 
-- @.claude/skills/scenario/bugfix-root-cause/SKILL.md ：复现、根因分析、失败测试编写。
-- @.claude/skills/scenario/feature-execution/SKILL.md ：任务分解、实施流程、提交策略。
-- @.claude/skills/scenario/feature-validation/SKILL.md ：修复后的质量门验证与报告。
-- @.claude/skills/scenario/quality-gates/SKILL.md ：目标化质量门执行。
-- @.claude/skills/method/context-snapshot/SKILL.md （可选）：用于记录阶段快照与审计摘要。
+- `scenario-bugfix-root-cause` ：复现、根因分析、失败测试编写。
+- `scenario-feature-execution` ：任务分解、实施流程、提交策略。
+- `scenario-feature-validation` ：修复后的质量门验证与报告。
+- `scenario-quality-gates` ：目标化质量门执行。
+- `method-context-snapshot` （可选）：用于记录阶段快照与审计摘要。
 
 ## 流程概览
 
-1. **解析 Issue**：读取描述、验收条件、复现步骤；不足时触发讨论（参 @.claude/skills/method/stakeholder-communication/SKILL.md ）。
-2. **复现与定位**：依据 @.claude/skills/scenario/bugfix-root-cause/SKILL.md ，编写失败测试或命令重现问题，锁定根因。
-3. **设计与实施**：参考 @.claude/skills/scenario/feature-execution/SKILL.md 制定修复计划，按语言/工具技能执行代码修改。
-4. **验证与回归**：使用 @.claude/skills/scenario/quality-gates/SKILL.md 和 @.claude/skills/scenario/feature-validation/SKILL.md 运行质量门，确认新测试通过且无回归。
+1. **解析 Issue**：读取描述、验收条件、复现步骤；不足时触发讨论（参 `method-stakeholder-communication` ）。
+2. **复现与定位**：依据 `scenario-bugfix-root-cause` ，编写失败测试或命令重现问题，锁定根因。
+3. **设计与实施**：参考 `scenario-feature-execution` 制定修复计划，按语言/工具技能执行代码修改。
+4. **验证与回归**：使用 `scenario-quality-gates` 和 `scenario-feature-validation` 运行质量门，确认新测试通过且无回归。
 5. **报告与提交**：汇总根因、修改点、验证证据，生成 `Fixes #<id>` 提交说明；`--output` 可导出报告。
 
 ## 产出
@@ -35,5 +35,5 @@ argument-hint: <issue-id|url> [--path <dir>] [--strict] [--dry-run] [--output <f
 ## 异常处理
 
 - 无法复现：暂停进入 `A待澄清`，记录已尝试步骤并请求补充信息。
-- 验证失败：按 @.claude/skills/scenario/feature-validation/SKILL.md 分类修复；若跨模块风险上升，升级沟通。
+- 验证失败：按 `scenario-feature-validation` 分类修复；若跨模块风险上升，升级沟通。
 - 需求变更：确认 Issue 是否需关闭并转为变更请求记录。

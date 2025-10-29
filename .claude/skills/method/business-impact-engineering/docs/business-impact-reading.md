@@ -1,6 +1,6 @@
 # 工程即商业价值精选阅读清单
 
-> 建议按章节顺序阅读，并在团队内共建“指标口径 + 实验模板 + 单位经济模型”资料库。阅读后将关键摘录补充到 `.claude/skills/method/business-impact-engineering/reference.md`。
+> 建议按章节顺序阅读，并在团队内共建“指标口径 + 实验模板 + 单位经济模型”资料库。阅读后将关键摘录补充到 `../reference.md`。
 
 ## 1. 价值导向与倒推法
 - [LeadDev · Focus on outcomes over outputs](https://leaddev.com/velocity/focus-outcomes-over-outputs?utm_source=chatgpt.com)  
@@ -43,4 +43,4 @@
 ## 使用建议
 1. 阅读后补充团队的指标基线、成本模型、实验模板，形成本地知识库。
 2. 在立项或复盘时引用对应章节，为 Value Brief 和假设提供可信来源。
-3. 将关键图表/表格整理进 `./.claude/skills/method/business-impact-engineering/templates/`，保持技能资源内聚。
+3. 将关键图表/表格整理进 `../templates/`，保持技能资源内聚。

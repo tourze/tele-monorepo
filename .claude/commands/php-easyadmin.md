@@ -12,17 +12,17 @@ argument-hint: [EntityOrDir] [--menu] [--no-service] [--output <file>] [--strict
 
 ## 加载技能
 
-- @.claude/skills/scenario/php-easyadmin-crud/SKILL.md ：CRUD 生成步骤、菜单配置、质量门要求。
-- @.claude/skills/language/php-symfony-controller-backoffice/SKILL.md ：后台控制器结构与权限。
-- @.claude/skills/language/php-symfony-service-layer/SKILL.md ：服务层分工与事务边界。
-- @.claude/skills/language/php-symfony-entity-repository/SKILL.md ：实体/仓储建模、查询性能。
-- 工具技能：`tool/php-phpstan`、`tool/php-phpunit`、`tool/php-rector`、`tool/php-monorepo-builder`（如需对齐依赖）。
+- `scenario-php-easyadmin-crud` ：CRUD 生成步骤、菜单配置、质量门要求。
+- `php-symfony-controller-backoffice` ：后台控制器结构与权限。
+- `php-symfony-service-layer` ：服务层分工与事务边界。
+- `php-symfony-entity-repository` ：实体/仓储建模、查询性能。
+- 工具技能：`php-tool-phpstan`、`php-tool-phpunit`、`php-tool-rector`、`php-tool-monorepo-builder`（如需对齐依赖）。
 
 ## 流程概览
 
 1. **范围识别**：列出实体、仓储、目标菜单组；确认角色与权限要求。
-2. **骨架生成**：依据 `scenario/php-easyadmin-crud` 创建或补全 CrudController、表单配置、字段与筛选器；`--menu` 时同步更新菜单服务。
-3. **业务分层**：结合 `language/php-symfony-service-layer` 将业务逻辑放在 Service，控制器仅负责交互。
+2. **骨架生成**：依据 `scenario-php-easyadmin-crud` 创建或补全 CrudController、表单配置、字段与筛选器；`--menu` 时同步更新菜单服务。
+3. **业务分层**：结合 `php-symfony-service-layer` 将业务逻辑放在 Service，控制器仅负责交互。
 4. **质量门**：运行 PHP-CS-Fixer、PHPStan、PHPUnit/Paratest；必要时更新翻译与配置，记录命令。
 5. **报告与交付**：生成变更清单、菜单/权限说明，必要时写入 `--output` 文件。
 
@@ -34,6 +34,6 @@ argument-hint: [EntityOrDir] [--menu] [--no-service] [--output <file>] [--strict
 
 ## 异常处理
 
-- 实体缺失或映射错误：暂停生成并参考 `language/php-symfony-entity-repository` 修正。
+- 实体缺失或映射错误：暂停生成并参考 `php-symfony-entity-repository` 修正。
 - 质量门失败：记录原因并自愈，必要时升级讨论。
 - 业务逻辑滥用：若发现控制器出现领域逻辑，立即转移到 Service 并补充测试。

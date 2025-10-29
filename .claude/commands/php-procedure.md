@@ -12,14 +12,14 @@ argument-hint: [ProcedureName] [--base=<Base|Cacheable|Lockable>] [--output <fil
 
 ## 加载技能
 
-- @.claude/skills/scenario/php-jsonrpc-procedure/SKILL.md ：Procedure 设计、参数校验、缓存/锁策略。
-- @.claude/skills/language/php-symfony-service-layer/SKILL.md ：服务层依赖、事务与幂等。
-- @.claude/skills/language/php-core-runtime/SKILL.md ：严格类型、异常链路、日志规范。
-- 工具技能：`tool/php-phpstan`、`tool/php-phpunit`、`tool/php-rector` 用于质量门。
+- `scenario-php-jsonrpc-procedure` ：Procedure 设计、参数校验、缓存/锁策略。
+- `php-symfony-service-layer` ：服务层依赖、事务与幂等。
+- `php-core-runtime` ：严格类型、异常链路、日志规范。
+- 工具技能：`php-tool-phpstan`、`php-tool-phpunit`、`php-tool-rector` 用于质量门。
 
 ## 流程概览
 
-1. **命名校验**：根据 `scenario/php-jsonrpc-procedure` 规则检查 Procedure 名称、命名空间、目录。
+1. **命名校验**：根据 `scenario-php-jsonrpc-procedure` 规则检查 Procedure 名称、命名空间、目录。
 2. **骨架生成**：创建类文件、注入依赖、编写 `handle`/`__invoke` 方法，添加参数 DTO 与返回值结构；按 `--base` 引入缓存或锁。
 3. **集成配置**：更新服务配置、路由或 `services.yaml`，保持与 `symfony` 架构一致；避免硬编码密钥。
 4. **质量门**：运行 PHP-CS-Fixer、PHPStan、PHPUnit（必要时使用 Paratest），并记录命令。

@@ -66,19 +66,19 @@
 
 | 场景 | 首选技能 | 必备动作 |
 | --- | --- | --- |
-| 需求澄清 / 范围界定 | `scenario/requirement-discovery` | 产出「用户故事 → 技术任务」表，列清假设与缺口 |
-| 方案 / 架构设计 | `scenario/feature-design` + 相关前端/后端设计技能 | 绘制六边形或界面草图，给出接口契约与风险评估 |
-| 开发落地 / 任务推进 | `scenario/feature-execution` | 建立交付节奏，登记命令输出与验证计划 |
-| 缺陷定位与修复 | `scenario/bugfix-root-cause` → 对应语言修复技能 | 提供最小可复现案例，完成红绿测试并复盘根因 |
-| 验收 / 质量门 | `scenario/feature-validation` + 语言工具技能 | 执行静态分析、单元/端到端测试与性能基线 |
-| 发布 / 回滚治理 | `scenario/release-rollback` | 准备回滚路径、变更公告与依赖检查 |
+| 需求澄清 / 范围界定 | `scenario-requirement-discovery` | 产出「用户故事 → 技术任务」表，列清假设与缺口 |
+| 方案 / 架构设计 | `scenario-feature-design` + 相关前端/后端设计技能 | 绘制六边形或界面草图，给出接口契约与风险评估 |
+| 开发落地 / 任务推进 | `scenario-feature-execution` | 建立交付节奏，登记命令输出与验证计划 |
+| 缺陷定位与修复 | `scenario-bugfix-root-cause` → 对应语言修复技能 | 提供最小可复现案例，完成红绿测试并复盘根因 |
+| 验收 / 质量门 | `scenario-feature-validation` + 语言工具技能 | 执行静态分析、单元/端到端测试与性能基线 |
+| 发布 / 回滚治理 | `scenario-release-rollback` | 准备回滚路径、变更公告与依赖检查 |
 
 ## 6. 行为准则与协同风格
 
 - **自驱与连续性**：默认在无阻塞时推进下一步，不等待额外指令。
 - **透明度**：所有关键决策与假设必须显式写出，保持“先声明再行动”。
 - **先证据后结论**：结论需引用命令或文件片段；若为推断，需标注不确定度。
-- **知识沉淀**：重大任务结束后调用 `scenario/engineering-retro` 输出复盘与记忆卡。
+- **知识沉淀**：重大任务结束后调用 `scenario-engineering-retro` 输出复盘与记忆卡。
 
 ## 7. 自检清单
 

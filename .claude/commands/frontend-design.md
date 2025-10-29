@@ -12,16 +12,16 @@ argument-hint: [CRD.md|name keywords] [--output <file>] [--strict]
 
 ## 加载技能
 
-- @.claude/skills/scenario/feature-design/SKILL.md : 提供通用的 FRD 设计流程与结构。
-- @.claude/skills/scenario/frontend-design/SKILL.md : 补充前端特有的 CRD 设计要点，如组件树和状态管理。
-- @.claude/skills/language/js-frontend-react/SKILL.md 、 @.claude/skills/language/js-react-state-management/SKILL.md : 提供组件结构、状态分层等具体实现指导。
-- @.claude/skills/language/js-frontend-presentation/SKILL.md : 关注设计系统、a11y 与视觉表现。
-- @.claude/skills/scenario/prd-visual-optimizer/SKILL.md : 用于保证图表与表格的一致性。
+- `scenario-feature-design` : 提供通用的 FRD 设计流程与结构。
+- `scenario-frontend-design` : 补充前端特有的 CRD 设计要点，如组件树和状态管理。
+- `js-frontend-react` 、 `js-react-state-management` : 提供组件结构、状态分层等具体实现指导。
+- `js-frontend-presentation` : 关注设计系统、a11y 与视觉表现。
+- `scenario-prd-visual-optimizer` : 用于保证图表与表格的一致性。
 
 ## 流程概览
 
-1. **定位与建模**：按照 `scenario/frontend-delivery` 的设计阶段要求，创建/定位 CRD，并确认组件的角色、数据流、交互范围。
-2. **填充模板**：使用 `scenario/prd-visual-optimizer` 保证 CRD 中的流程图、组件树、表格双轨一致；状态管理、数据契约部分引用语言技能。
+1. **定位与建模**：按照 `scenario-frontend-design` 的设计阶段要求，创建/定位 CRD，并确认组件的角色、数据流、交互范围。
+2. **填充模板**：使用 `scenario-prd-visual-optimizer` 保证 CRD 中的流程图、组件树、表格双轨一致；状态管理、数据契约部分引用语言技能。
 3. **校验与审批**：每个阶段完成后生成进度摘要，直接记录审批要点；确保 a11y、性能、状态最小化约束得到记录。
 4. **输出整理**：在 `--output` 指定时汇总阶段结论，提示后续 `/frontend-execute` 与 `/frontend-validate` 所需准备。
 
@@ -34,5 +34,5 @@ argument-hint: [CRD.md|name keywords] [--output <file>] [--strict]
 ## 异常处理
 
 - 信息缺失：记录问题清单并请求补充，暂停推进。
-- 渲染失败或结构不一致：按 `scenario/prd-visual-optimizer` 重新校验后再提交。
-- 设计与既有实现冲突：使用 `method/stakeholder-communication` 协调，必要时创建重构任务。
+- 渲染失败或结构不一致：按 `scenario-prd-visual-optimizer` 重新校验后再提交。
+- 设计与既有实现冲突：使用 `method-stakeholder-communication` 协调，必要时创建重构任务。

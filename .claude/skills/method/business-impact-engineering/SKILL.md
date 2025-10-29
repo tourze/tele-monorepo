@@ -99,13 +99,13 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 - 若关键指标定义不清或数据口径存在歧义，必须停止方案评审，优先补齐指标定义并更新风险登记。
 - 当护栏指标（错误率、成本、性能等）触发阈值时，按照预设 Kill Switch 立即切回安全配置，恢复原有版本。
-- 实验结果若出现统计不显著或与假设相反，应按照预定义流程进入复盘：调用 `scenario/engineering-retro`，评估假设、样本量与数据质量，必要时重置实验或调整方案。
+- 实验结果若出现统计不显著或与假设相反，应按照预定义流程进入复盘：调用 `scenario-engineering-retro`，评估假设、样本量与数据质量，必要时重置实验或调整方案。
 - 对于上线后出现的非预期成本或性能回退，立即执行回滚 Runbook，并在滚回后分析误差预算消耗，再决定重新放量。
 
 ## 验证与风险预案
 
 - 在方案设计阶段，必须确保所有关键指标与数据口径都清晰无歧义。若发现模糊之处，应将其标记为高优先级风险，并规划相应的澄清步骤。
-- 方案应包含对实验结果的预判。如果结果不显著或与核心假设相悖，应启动预定义的复盘与调整流程（例如，调用 `scenario/engineering-retro`）。
+- 方案应包含对实验结果的预判。如果结果不显著或与核心假设相悖，应启动预定义的复盘与调整流程（例如，调用 `scenario-engineering-retro`）。
 
 ## 配套模板
 
@@ -113,7 +113,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 - 指标链路检查清单：`templates/metrics-checklist.md`
 - 特性开关灰度表：`templates/feature-flag-rollout.md`
 - 实验设计简表：`templates/experiment-plan.md`
-- 阅读清单：详见 `reference.md`（内含本技能专用的 `.claude/skills/method/business-impact-engineering/docs/business-impact-reading.md` 报告与外部链接）
+- 阅读清单：详见 `reference.md`（内含本技能专用的 `docs/business-impact-reading.md` 报告与外部链接）
 
 ## 参考资料
 

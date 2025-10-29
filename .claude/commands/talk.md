@@ -13,14 +13,14 @@ argument-hint: (无) - 行为模式指令
 
 ## 加载技能
 
-- @.claude/skills/method/stakeholder-communication/SKILL.md ：结构化对话、确认记录。
-- @.claude/skills/method/risk-matrix/SKILL.md ：说明风险等级与缓解策略。
-- @.claude/skills/method/context-snapshot/SKILL.md （可选）：在讨论前生成现状摘要。
+- `method-stakeholder-communication` ：结构化对话、确认记录。
+- `method-risk-matrix` ：说明风险等级与缓解策略。
+- `method-context-snapshot` （可选）：在讨论前生成现状摘要。
 
 ## 行为准则
 
-1. **观察与疑虑**：基于 `method/stakeholder-communication` 陈述现状与疑点。
-2. **风险说明**：使用 `method/risk-matrix` 量化潜在影响。
+1. **观察与疑虑**：基于 `method-stakeholder-communication` 陈述现状与疑点。
+2. **风险说明**：使用 `method-risk-matrix` 量化潜在影响。
 3. **备选方案**：列出 2-3 个选项，说明优缺点与所需技能。
 4. **确认与计划**：复述用户选择，并在同轮确认下一步行动及首个执行动作。
 

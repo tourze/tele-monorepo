@@ -8,9 +8,9 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 关联技能
 
-- `.claude/skills/tool/php-composer/SKILL.md`：依赖治理与只读命令策略
-- `.claude/skills/scenario/quality-gates/SKILL.md`：记录验证命令与目标显式执行
-- `.claude/skills/method/security-baseline/SKILL.md`：配置、密钥与安全提醒
+- `php-tool-composer`：依赖治理与只读命令策略
+- `scenario-quality-gates`：记录验证命令与目标显式执行
+- `method-security-baseline`：配置、密钥与安全提醒
 - 相关语言/工具技能：根据模块语言引用对应测试与构建流程
 
 ## 适用场景

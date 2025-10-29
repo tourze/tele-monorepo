@@ -14,10 +14,10 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 关联技能
 
-- `scenario/feature-design`（理解 FRD 结构与约束）
-- `scenario/quality-gates`（执行格式/静态分析/测试/构建）
-- `scenario/feature-validation`（验证报告与修复任务对齐）
-- `method/context-snapshot`（长流程记录快照）
+- `scenario-feature-design`（理解 FRD 结构与约束）
+- `scenario-quality-gates`（执行格式/静态分析/测试/构建）
+- `scenario-feature-validation`（验证报告与修复任务对齐）
+- `method-context-snapshot`（长流程记录快照）
 - 语言/工具技能按任务涉及的技术栈加载
 
 ## 前置准备

@@ -29,7 +29,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 ## 操作步骤
 
 1. **设定基线**
-   - 调用 `/git-history` 或 `method/git-forensics` 获取 Baseline 关键提交。
+   - 调用 `/git-history` 或 `method-git-forensics` 获取 Baseline 关键提交。
    - 核对版本差异：接口签名、实体结构、配置文件、依赖清单。
    - 若 Baseline 未通过质量门，先记录风险并确认是否需要同步修复。
 2. **梳理对齐对象**
@@ -39,7 +39,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 3. **验证差异**
    - 分类处理：协议/路由、领域逻辑、数据模型、鉴权与观测。
    - 对每个差异写明处理动作（修复/保留/待决），附责任人和截止时间。
-   - 关键逻辑需补充自动化测试；引用 `.claude/skills/scenario/quality-gates` 执行质量门。
+   - 关键逻辑需补充自动化测试；引用 `scenario-quality-gates` 执行质量门。
 4. **业务与技术验证**
    - 编写并运行对齐测试脚本（可选：合同测试、接口回放、截图对比）。
    - 若涉及配置/基础设施，记录对应 `terraform`/`ansible`/`helm` 差异。
@@ -58,7 +58,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 - `symfony console debug:router`、`php bin/console doctrine:mapping:info`：核对路由与实体。
 - `python manage.py show_urls`、`django-admin check`：对齐 Django 端点与健康状况。
 - 合同测试/接口对比工具：`pact`, `schemathesis`, `curl`+`jq` 脚本。
-- 质量门：复用 `/fix-code`、`/quality-batch`（若已有）、`scenario/quality-gates`。
+- 质量门：复用 `/fix-code`、`/quality-batch`（若已有）、`scenario-quality-gates`。
 
 ## 交付物
 
@@ -76,6 +76,6 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 复盘要求
 
-- 完成后调用 `scenario/engineering-retro` 或 `method/retro-memory` 记录经验。
+- 完成后调用 `scenario-engineering-retro` 或 `method-retro-memory` 记录经验。
 - 更新相关命令/技能（如 `/quality-batch`、`/service-parity-check`）以沉淀复用资产。
 - 将成功案例纳入团队知识库，作为后续对齐行动的基准模板。

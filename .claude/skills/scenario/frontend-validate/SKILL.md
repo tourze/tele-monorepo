@@ -13,14 +13,14 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 前置准备
 
-- 获取最新的 CRD、体验验收标准、质量门列表以及 `scenario/feature-validation` 的验证计划。
+- 获取最新的 CRD、体验验收标准、质量门列表以及 `scenario-feature-validation` 的验证计划。
 - 准备测试环境：真实设备或云端设备、浏览器矩阵、网络模拟工具、可访问性辅助工具。
 - 确认性能与埋点监控已接入，能够采集 Web Vitals、业务转化等指标。
 - 对齐回滚或热修机制，确保验证中发现阻塞问题时可快速止损。
 
 ## 与通用验证的关系
 
-本技能遵循 `scenario/feature-validation` 的核心流程（读取标准 → 执行质量门 → 差距分析 → 生成报告），但在“执行质量门”和“差距分析”阶段补充前端专属的验证维度。
+本技能遵循 `scenario-feature-validation` 的核心流程（读取标准 → 执行质量门 → 差距分析 → 生成报告），但在“执行质量门”和“差距分析”阶段补充前端专属的验证维度。
 
 ## 操作步骤
 

@@ -34,7 +34,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
    - 提供状态总结：通过 / 需修复 / 阻塞。
 5. **复核与交接**
    - 与相关团队确认结果。
-   - 如需返工，回流至实施流程（参见 `scenario/feature-execution`）或重新进入设计阶段。
+   - 如需返工，回流至实施流程（参见 `scenario-feature-execution`）或重新进入设计阶段。
 
 ## 质量校验
 

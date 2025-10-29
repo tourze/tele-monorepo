@@ -11,14 +11,14 @@ argument-hint: '[command_name]'
 
 ## 加载技能
 
-- @.claude/skills/method/state-machine-visualizer/SKILL.md ：从命令定义抽取状态机、生成 Mermaid 图、撰写摘要。
-- @.claude/skills/method/context-snapshot/SKILL.md （可选）：获取当前状态描述。
+- `method-state-machine-visualizer` ：从命令定义抽取状态机、生成 Mermaid 图、撰写摘要。
+- `method-context-snapshot` （可选）：获取当前状态描述。
 
 ## 流程概览
 
 1. **定位工作流**：在对话或任务历史中寻找活动状态机；若无活动，选择最近完成的。
 2. **读取定义**：解析目标命令的 Markdown，提取状态与转移。
-3. **渲染图形**：调用 `method/state-machine-visualizer` 输出 Mermaid `graph TD`，并高亮当前/终止状态。
+3. **渲染图形**：调用 `method-state-machine-visualizer` 输出 Mermaid `graph TD`，并高亮当前/终止状态。
 4. **输出摘要**：对活动工作流说明当前状态与下一步；对已完成工作流引用最终报告关键信息。
 
 ## 产出

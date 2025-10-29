@@ -40,7 +40,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ### Codex MCP 协作触发条件
 
-在以下情况下必须先触发 Codex MCP 协作( @.claude/skills/scenario/codex-mcp-collaboration/SKILL.md )，禁止直接放弃或登记 Issue：
+在以下情况下必须先触发 Codex MCP 协作( `scenario-codex-mcp-collaboration` )，禁止直接放弃或登记 Issue：
 
 | 触发条件 | 具体场景 | 期望输出 |
 |---------|---------|---------|
@@ -60,7 +60,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ### 并行推进要求
 
-1. 按照 @.claude/skills/method/parallel-task-coordination/SKILL.md 规划批次与任务队列，明确并行粒度、依赖关系与验收口径。
+1. 按照 `method-parallel-task-coordination` 规划批次与任务队列，明确并行粒度、依赖关系与验收口径。
 2. 在命中多个问题时，立即创建子代理或多任务执行器，并在各轮总结中同步进度、风险与剩余行动。
 3. 并行任务完成后需合并验证结果，确保质量门覆盖全部改动；若存在冲突，优先保障业务正确并记录处理策略。
 
@@ -77,7 +77,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
    - 基于验证结果明确修复策略、影响范围、验证方式与回滚路径
    - 遵循 `scenario-quality-gates` 规划需要执行的质量门
 6. **实施修复**
-   - 根据语言/框架加载对应技能（例如 `language/php-framework-symfony`、`tool/php-phpstan`）执行变更。
+   - 根据语言/框架加载对应技能（例如 `php-framework-symfony`、`php-tool-phpstan`）执行变更。
    - 按技能推荐命令执行格式化、静态分析、测试，记录输出。
    - 修复过程中新增识别的问题必须纳入当前循环，更新并行任务计划直至全部清零。
 

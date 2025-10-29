@@ -14,11 +14,11 @@ argument-hint: [session-scope] [--output <file>] [--focus <aspect>]
 
 ## 加载技能
 
-- @.claude/skills/scenario/engineering-retro/SKILL.md ：端到端复盘流程、结构化报告模板。
-- @.claude/skills/method/retro-memory/SKILL.md ：提炼经验、记录知识卡与改进项。
-- @.claude/skills/method/context-snapshot/SKILL.md ：获取当前会话快照，保持事实准确。
-- @.claude/skills/method/risk-matrix/SKILL.md ：对发现的问题进行风险评级。
-- @.claude/skills/method/stakeholder-communication/SKILL.md （可选）：输出面向干系人的沟通记录与后续计划。
+- `scenario-engineering-retro` ：端到端复盘流程、结构化报告模板。
+- `method-retro-memory` ：提炼经验、记录知识卡与改进项。
+- `method-context-snapshot` ：获取当前会话快照，保持事实准确。
+- `method-risk-matrix` ：对发现的问题进行风险评级。
+- `method-stakeholder-communication` （可选）：输出面向干系人的沟通记录与后续计划。
 
 ## 流程概览
 

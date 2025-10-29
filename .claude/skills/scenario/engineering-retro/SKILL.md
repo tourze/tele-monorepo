@@ -15,7 +15,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 - 汇总复盘所需资料：会话记录、任务日志、PR/Commit 链接、质量门结果、报警或监控截图。
 - 明确参与角色与干系人，提前预约复盘时间，准备协同文档或白板工具。
-- 回顾相关技能输出（如 `scenario/feature-execution`、`method/code-fix-loop`），确保结论与上下游流程对齐。
+- 回顾相关技能输出（如 `scenario-feature-execution`、`method-code-fix-loop`），确保结论与上下游流程对齐。
 - 列出待验证的问题清单与假设，便于会议中逐项确认。
 
 ## 操作步骤

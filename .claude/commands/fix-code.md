@@ -30,20 +30,20 @@ lastUpdated: 2026-01-10
 
 ### 必须加载的技能
 
-- @.claude/skills/method/code-fix-loop/SKILL.md ：统一“定位 → 分析 → 修复 → 回归 → 复盘”流程，并指引与语言/工具技能衔接。
-- @.claude/skills/scenario/quality-gates/SKILL.md ：格式、静态分析、测试、依赖、构建的执行顺序与记录模板。
-- @.claude/skills/method/nplus1-guardian/SKILL.md 、 @.claude/skills/method/security-baseline/SKILL.md：在修复过程中守住性能与安全红线。
-- @.claude/skills/tool/git-auto-commit/SKILL.md ：在质量门通过后执行自动暂存与提交，并记录验证命令。
-- @.claude/skills/method/parallel-task-coordination/SKILL.md ：默认开启并行拆解，指导子代理协作与任务并发执行。
+- `method-code-fix-loop` ：统一“定位 → 分析 → 修复 → 回归 → 复盘”流程，并指引与语言/工具技能衔接。
+- `scenario-quality-gates` ：格式、静态分析、测试、依赖、构建的执行顺序与记录模板。
+- `method-nplus1-guardian` 、 `method-security-baseline`：在修复过程中守住性能与安全红线。
+- `git-tool-auto-commit` ：在质量门通过后执行自动暂存与提交，并记录验证命令。
+- `method-parallel-task-coordination` ：默认开启并行拆解，指导子代理协作与任务并发执行。
 
 ### 按需加载的技能
 
-- `.claude/skills/method/state-machine-visualizer/SKILL.md`（可选）：结合 `/stm-dump` 复盘修复状态机。
-- `.claude/skills/scenario/codex-mcp-collaboration/SKILL.md`：遇到棘手问题或高不确定性决策时，构造上下文与 Codex 协作。
+- `method-state-machine-visualizer`（可选）：结合 `/stm-dump` 复盘修复状态机。
+- `scenario-codex-mcp-collaboration`：遇到棘手问题或高不确定性决策时，构造上下文与 Codex 协作。
 - 语言/工具类技能按需加载到批处理步骤中。不限于下面的列表：
-  - `.claude/skills/tool/php-phpstan/SKILL.md`
-  - `.claude/skills/tool/php-phpunit/SKILL.md`
-  - `.claude/skills/tool/js-eslint/SKILL.md`
+  - `php-tool-phpstan`
+  - `php-tool-phpunit`
+  - `js-tool-eslint`
 
 请一定根据实际业务需要，主动加载 SKILL。
 
@@ -72,16 +72,16 @@ lastUpdated: 2026-01-10
 
 ## 流程概览
 
-1. **定位与分级**：调用 @.claude/skills/method/code-fix-loop/SKILL.md 识别业务影响、收集日志/复现脚本，并在当轮输出 Todo 与首个执行动作。
+1. **定位与分级**：调用 `method-code-fix-loop` 识别业务影响、收集日志/复现脚本，并在当轮输出 Todo 与首个执行动作。
 2. **根因分析**：在定位证据基础上对照历史提交、配置与监控，必要时加载语言/框架技能辅助推理。
 3. **批次划分**（推荐）：
    - **问题数量 10-50**：按错误类型分组（类型声明、测试、复杂度等），顺序执行或小规模并行（2-3 个任务）
-   - **问题数量 > 50**：使用 @.claude/skills/method/parallel-task-coordination/SKILL.md 指导批次划分
-   - **问题数量 > 100** 或**复杂度高**：与 Codex MCP 协作制定批次策略（参考 @.claude/skills/scenario/codex-mcp-collaboration/SKILL.md 的"批次划分模板"）
+   - **问题数量 > 50**：使用 `method-parallel-task-coordination` 指导批次划分
+   - **问题数量 > 100** 或**复杂度高**：与 Codex MCP 协作制定批次策略（参考 `scenario-codex-mcp-collaboration` 的"批次划分模板"）
    - 参考下方"批次化修复策略示例"
 4. **修复批次**：根据根因拆分批次，调用语言/工具技能执行变更，记录命令与输出，自愈次数不超过 3 次；`php-cs-fixer` 仅用于最终收口。
-5. **回归验证**：按 @.claude/skills/scenario/quality-gates/SKILL.md 规划的质量门逐项验证，若静态分析导致测试失败，优先修正测试逻辑。
-6. **复盘与提交**：总结修复要点、残留风险，必要时登记例外卡，再次运行完整质量门；满足条件后按 @.claude/skills/tool/git-auto-commit/SKILL.md 自动提交并记录验证命令。
+5. **回归验证**：按 `scenario-quality-gates` 规划的质量门逐项验证，若静态分析导致测试失败，优先修正测试逻辑。
+6. **复盘与提交**：总结修复要点、残留风险，必要时登记例外卡，再次运行完整质量门；满足条件后按 `git-tool-auto-commit` 自动提交并记录验证命令。
 
 > 如果有任务还在后台运行未结束，则不能进入复盘阶段，必须等待执行完成。
 
@@ -236,5 +236,5 @@ lastUpdated: 2026-01-10
 
 - 质量门不可达：记录环境限制，必要时暂停并请求资源支持。
 - 静态分析修复导致测试失败：优先适配测试，严禁回退修复（参见语言/工具技能中的最佳实践）。
-- 自愈失败或出现高风险问题：升级讨论，必要时结合 @.claude/skills/method/context-snapshot/SKILL.md 输出现状摘要后终止。
-- 批次执行冲突：参考 @.claude/skills/method/parallel-task-coordination/SKILL.md 冲突处理策略，必要时降低并行度。
+- 自愈失败或出现高风险问题：升级讨论，必要时结合 `method-context-snapshot` 输出现状摘要后终止。
+- 批次执行冲突：参考 `method-parallel-task-coordination` 冲突处理策略，必要时降低并行度。

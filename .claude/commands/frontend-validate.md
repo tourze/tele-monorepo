@@ -12,16 +12,16 @@ argument-hint: [CRD.md] [--fix-only] [--output <file>] [--strict]
 
 ## 加载技能
 
-- @.claude/skills/scenario/feature-validation/SKILL.md : 提供通用的差距分析、风险评估和报告流程。
-- @.claude/skills/scenario/frontend-validate/SKILL.md : 补充前端特有的验证维度，如性能和浏览器兼容性。
-- @.claude/skills/scenario/quality-gates/SKILL.md : 执行前端质量门。
-- @.claude/skills/method/risk-matrix/SKILL.md : 用于评估失败项的风险等级。
+- `scenario-feature-validation` : 提供通用的差距分析、风险评估和报告流程。
+- `scenario-frontend-validate` : 补充前端特有的验证维度，如性能和浏览器兼容性。
+- `scenario-quality-gates` : 执行前端质量门。
+- `method-risk-matrix` : 用于评估失败项的风险等级。
 
 ## 流程概览
 
 1. **对齐标准**：解析 CRD 的质量验收标准、任务分解、监控需求，构建核对清单。
-2. **执行质量门**：通过 `scenario/quality-gates` 对目标路径运行格式、Lint、类型、测试、构建命令；记录命令与结果。
-3. **差距分析**：比较质量门结果与验收标准，使用 `scenario/feature-validation` 生成 R 编号任务，并以 `method/risk-matrix` 评估风险。
+2. **执行质量门**：通过 `scenario-quality-gates` 对目标路径运行格式、Lint、类型、测试、构建命令；记录命令与结果。
+3. **差距分析**：比较质量门结果与验收标准，使用 `scenario-feature-validation` 生成 R 编号任务，并以 `method-risk-matrix` 评估风险。
 4. **输出报告**：更新 CRD 验证区块或写入 `--output` 文件；`--fix-only` 时仅输出任务清单与责任人。
 
 ## 产出

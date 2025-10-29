@@ -40,4 +40,4 @@
 - **Milliseconds Make Millions**（web.dev）  
   性能优化对转化、客单、浏览深度的直接影响。
 
-> 以上链接收录于 `.claude/skills/method/business-impact-engineering/docs/business-impact-reading.md`（method-business-impact-engineering 技能专用阅读清单），可在其中查阅原文与访问地址。
+> 以上链接收录于 `docs/business-impact-reading.md`（method-business-impact-engineering 技能专用阅读清单），可在其中查阅原文与访问地址。

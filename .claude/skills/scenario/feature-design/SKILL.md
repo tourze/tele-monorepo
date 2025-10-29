@@ -14,7 +14,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 前置准备
 
-- 已完成 `method/business-impact-engineering` 输出，掌握商业目标、指标链路与灰度策略。
+- 已完成 `method-business-impact-engineering` 输出，掌握商业目标、指标链路与灰度策略。
 - 收集现有系统架构、数据模型、接口契约、权限模型，准备对照差异。
 - 明确干系人名单（业务方、产品、架构、运维、安全），预约评审节奏与审批要求。
 - 准备双轨交付模版：Mermaid 画布、表格模板、版本记录（可在 `templates/` 中维护）。
@@ -41,10 +41,10 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
     - **结构化表**: 使用表格定义需求范围、权限矩阵、接口清单等。
 4. **技术方案与风险**
     - 描述架构、数据流、接口契约、数据模型。
-    - 应用 `method/risk-matrix` 识别风险，制定缓解措施。
+    - 应用 `method-risk-matrix` 识别风险，制定缓解措施。
     - 设计回滚策略、特性开关、灰度方案。
 5. **计划与验收**
-    - 使用 `scenario/ratecard-quote` 估算成本，制定里程碑。
+    - 使用 `scenario-ratecard-quote` 估算成本，制定里程碑。
     - 定义详细的验收标准和测试策略。
 
 ## 质量校验

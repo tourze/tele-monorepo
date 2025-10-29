@@ -12,18 +12,18 @@ argument-hint: [CRD.md|path] [--scope <glob>] [--output <file>] [--strict]
 
 ## 加载技能
 
-- @.claude/skills/scenario/frontend-delivery/SKILL.md ：重构阶段策略、性能/a11y 校验、回归计划。
-- @.claude/skills/method/data-structure-first/SKILL.md ：拆分组件、提取纯函数、降低圈复杂度。
-- @.claude/skills/method/nplus1-guardian/SKILL.md ：识别与消除前端 N+1 请求和重复渲染。
-- @.claude/skills/method/security-baseline/SKILL.md ：输出转义、敏感数据处理守护。
+- `scenario-frontend-execute` ：重构阶段策略、性能/a11y 校验、回归计划。
+- `method-data-structure-first` ：拆分组件、提取纯函数、降低圈复杂度。
+- `method-nplus1-guardian` ：识别与消除前端 N+1 请求和重复渲染。
+- `method-security-baseline` ：输出转义、敏感数据处理守护。
 - 语言/工具技能：React 状态管理、呈现层、TS 类型、Prettier/ESLint/Vitest/Vite.
 
 ## 流程概览
 
-1. **范围扫描**：读取 CRD 或目录，结合 `scenario/frontend-delivery` 的检测清单识别重构机会（职责、状态、性能、a11y）。
-2. **任务分组**：运用 `method/data-structure-first` 将重构项按数据结构或组件职责分组，评估风险与收益。
+1. **范围扫描**：读取 CRD 或目录，结合 `scenario-frontend-execute` 的检测清单识别重构机会（职责、状态、性能、a11y）。
+2. **任务分组**：运用 `method-data-structure-first` 将重构项按数据结构或组件职责分组，评估风险与收益。
 3. **计划输出**：按照优先级生成重构计划，明确所需语言/工具技能以及质量门。
-4. **实施（可选）**：在同一命令中可逐项执行，并在每次改动后运行 `scenario/quality-gates` 定向验证。
+4. **实施（可选）**：在同一命令中可逐项执行，并在每次改动后运行 `scenario-quality-gates` 定向验证。
 5. **报告整理**：`--output` 可生成 Markdown 报告，包含任务列表、验证结果、回滚策略。
 
 ## 产出

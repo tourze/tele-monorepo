@@ -13,14 +13,14 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 前置准备
 
-- 已完成 `scenario/feature-design` 的 Value Brief、范围与验收标准，并获得主要干系人认可。
+- 已完成 `scenario-feature-design` 的 Value Brief、范围与验收标准，并获得主要干系人认可。
 - 收集现有设计系统规范（色板、排版、组件库）、可访问性要求以及品牌约束。
 - 准备技术栈资料：框架版本、状态管理方案、数据源契约、API Mock 或 Swagger。
 - 约定 CRD 输出形式（Markdown + Mermaid + 表格），并在仓库创建 `crd/<feature>/` 目录存放资产。
 
 ## 与通用设计的关系
 
-本技能遵循 `scenario/feature-design` 的核心流程，包括商业价值对齐、风险评估、计划与验收标准定义。在此基础上，本技能专注于前端特有的设计产出。
+本技能遵循 `scenario-feature-design` 的核心流程，包括商业价值对齐、风险评估、计划与验收标准定义。在此基础上，本技能专注于前端特有的设计产出。
 
 ## 操作步骤
 
@@ -31,11 +31,11 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
    - 使用 Mermaid 绘制组件树，标出容器组件、展示组件、跨页面复用单元。
    - 为每个组件定义 Props、State、Slots、事件回调，注明来源与去向。
 3. **状态与数据流规划**
-   - 参考 `language/js-react-state-management`，划分全局状态、视图状态、局部状态，并指明 Store/Hook 归属。
+   - 参考 `js-react-state-management`，划分全局状态、视图状态、局部状态，并指明 Store/Hook 归属。
    - 定义数据流与缓存策略，说明与后端 API、WebSocket 或本地存储的同步方式。
 4. **API 契约与交互细节**
    - 起草前端视角的接口契约（路径、方法、请求/响应、错误码），与后端协商一致。
-   - 依据 `language/js-frontend-presentation` 制定交互、动效、可访问性要求；引用 `scenario/prd-visual-optimizer` 对齐图表/表格表现。
+   - 依据 `js-frontend-presentation` 制定交互、动效、可访问性要求；引用 `scenario-prd-visual-optimizer` 对齐图表/表格表现。
 5. **评审与版本管理**
    - 输出 CRD 文档与附属图表，组织设计评审，收集反馈并形成版本记录。
    - 将评审决议同步到任务板与实现计划，确保后续开发引用同一版本。
