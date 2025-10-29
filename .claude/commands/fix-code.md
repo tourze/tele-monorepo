@@ -9,6 +9,8 @@ lastUpdated: 2026-01-10
 ## 参数
 
 - **必填**：`path`（包/模块目录，缺省为当前目录）。
+  - 一般情况下会传入目录或文件路径
+  - 如传入的是非路径(如直接传入了错误堆栈)，则需要智能分析并定位具体的工作目录
 - **可选**：`--strict`（禁止未知旗标）、`--dry-run`（仅分析不改动）、`--output <file>`（输出报告）。
 - 命令目标必须可运行质量门；禁止跨仓库或全仓扫描。
 
@@ -27,6 +29,7 @@ lastUpdated: 2026-01-10
 ## 加载技能
 
 ### 必须加载的技能
+
 - @.claude/skills/method/code-fix-loop/SKILL.md ：统一“定位 → 分析 → 修复 → 回归 → 复盘”流程，并指引与语言/工具技能衔接。
 - @.claude/skills/scenario/quality-gates/SKILL.md ：格式、静态分析、测试、依赖、构建的执行顺序与记录模板。
 - @.claude/skills/method/nplus1-guardian/SKILL.md 、 @.claude/skills/method/security-baseline/SKILL.md：在修复过程中守住性能与安全红线。
@@ -34,6 +37,7 @@ lastUpdated: 2026-01-10
 - @.claude/skills/method/parallel-task-coordination/SKILL.md ：默认开启并行拆解，指导子代理协作与任务并发执行。
 
 ### 按需加载的技能
+
 - `.claude/skills/method/state-machine-visualizer/SKILL.md`（可选）：结合 `/stm-dump` 复盘修复状态机。
 - `.claude/skills/scenario/codex-mcp-collaboration/SKILL.md`：遇到棘手问题或高不确定性决策时，构造上下文与 Codex 协作。
 - 语言/工具类技能按需加载到批处理步骤中。不限于下面的列表：
@@ -102,6 +106,7 @@ lastUpdated: 2026-01-10
 ### 示例：修复 118 个 PHPStan level=max 错误
 
 **问题分类**：
+
 - 依赖声明：1 个
 - 风格问题：8 个（empty()、短三元）
 - 弃用 API：13 个
@@ -110,7 +115,8 @@ lastUpdated: 2026-01-10
 - 测试覆盖：若干
 
 **批次划分**：
-```
+
+```markdown
 批次一：基础依赖与风格治理（并行度 2）
   - 任务A：补齐依赖声明 ✅ 可并行
   - 任务B：风格治理（empty、短三元）✅ 可并行
@@ -144,6 +150,7 @@ lastUpdated: 2026-01-10
 ```
 
 **执行结果**：
+
 - PHPStan 错误：118 → 73（-38%）
 - 测试失败：18 → 14（-22%）
 - 并行效率提升 ~40%（批次一、二）
@@ -178,8 +185,9 @@ lastUpdated: 2026-01-10
 
 ### 常见批次划分模式
 
-**模式 1：存量质量问题治理**
-```
+#### **模式 1：存量质量问题治理**
+
+```markdown
 批次一：基础设施（依赖、配置）
 批次二：代码风格（格式、命名、惯用法）
 批次三：类型系统（类型声明、泛型、PHPDoc）
@@ -187,8 +195,9 @@ lastUpdated: 2026-01-10
 批次五：测试与验证（补充测试、更新断言）
 ```
 
-**模式 2：框架/语言版本升级**
-```
+#### **模式 2：框架/语言版本升级**
+
+```markdown
 批次一：依赖升级（composer update、兼容性检查）
 批次二：弃用 API 更替（全局搜索替换）
 批次三：类型系统适配（新增严格类型、返回类型）
@@ -196,8 +205,9 @@ lastUpdated: 2026-01-10
 批次五：性能优化与清理（移除兼容代码）
 ```
 
-**模式 3：新规则引入**
-```
+#### **模式 3：新规则引入**
+
+```markdown
 批次一：规则配置与基线建立
 批次二：自动修复（格式化、简单类型）
 批次三：手动修复（复杂逻辑、重构）
@@ -205,8 +215,9 @@ lastUpdated: 2026-01-10
 批次五：基线清理与 CI 配置
 ```
 
-**模式 4：中小规模修复（10-50 个错误）**
-```
+#### **模式 4：中小规模修复（10-50 个错误）**
+
+```markdown
 批次一：快速清理（低风险，可并行 2-3 个任务）
   - 类型声明（为参数/返回值添加 PHPDoc）
   - offsetAccess 检查（添加 assertNotNull/assertArrayHasKey）
@@ -221,111 +232,9 @@ lastUpdated: 2026-01-10
   - 集成测试（可选，评估成本后决定）
 ```
 
-### 测试失败修复常见模式
-
-基于实战经验，以下是测试失败的常见问题和解决方案：
-
-#### EasyAdmin 测试
-
-**模式 1：表单选择器错误**
-- **症状**：`Unreachable field "EntityName"` 或 `InvalidArgumentException`
-- **根因**：使用 `$crawler->filter('form')->first()` 选择了搜索表单而非编辑表单
-- **解决**：使用表单 name 属性选择器
-  ```php
-  // ❌ 错误：选择第一个表单
-  $form = $crawler->filter('form')->first()->form();
-
-  // ✅ 正确：使用 name 属性
-  $form = $crawler->filter('form[name="EntityName"]')->form();
-  ```
-
-**模式 2：验证错误触发**
-- **症状**：期望 422 状态码，实际返回 200
-- **根因**：必填字段未清空，或值被转换为 null 导致 setter 类型错误
-- **解决**：使用无效值而非空值
-  ```php
-  // ❌ 可能失败：空值被转换为 null
-  $form->setValues(['EntityName[field]' => '']);
-
-  // ✅ 推荐：使用明确无效的值
-  $form->setValues(['EntityName[url]' => 'not-a-valid-url']);
-  ```
-
-#### Symfony 测试
-
-**模式 1：客户端注册缺失**
-- **症状**：`A client must be set to make assertions on it`
-- **根因**：`createClient()` 未注册到静态缓存
-- **解决**：手动注册客户端
-  ```php
-  $client = self::createClient();
-  self::getClient($client); // 手动注册
-  $client->request($method, $url);
-  $this->assertResponseStatusCodeSame(200);
-  ```
-
-**模式 2：DataProvider 迁移（PHPUnit 10+）**
-- **症状**：PHPStan 错误或测试验证失败
-- **根因**：使用旧版 `@dataProvider` 注解
-- **解决**：迁移到 `#[DataProvider]` 属性
-  ```php
-  // ❌ PHPUnit 9 风格
-  /** @dataProvider provideTestData */
-  public function testSomething($data): void
-
-  // ✅ PHPUnit 10+ 风格
-  #[DataProvider('provideTestData')]
-  public function testSomething($data): void
-  ```
-
-**模式 3：重定向缺失 EasyAdmin 上下文**
-- **症状**：`AdminContext::getEntity(): Return value must be of type EntityDto, null returned`
-- **根因**：使用 `generateUrl()` 生成重定向 URL，缺失 EasyAdmin 上下文
-- **解决**：优先使用 referer
-  ```php
-  // ✅ 使用 referer 保留完整上下文
-  private function redirectToIndex(): Response
-  {
-      $referer = $this->adminContextProvider->getContext()?->getRequest()?->headers->get('referer');
-      if ($referer) {
-          return $this->redirect($referer);
-      }
-      return $this->redirectToRoute('admin', ['crudAction' => 'index', ...]);
-  }
-  ```
-
-### 测试失败诊断清单
-
-遇到测试失败时，按以下顺序快速排查：
-
-1. **表单选择器**（EasyAdmin 测试）
-   - [ ] 是否使用了 `form[name="EntityName"]` 选择器？
-   - [ ] 表单字段名是否正确？
-
-2. **客户端注册**（Symfony 测试）
-   - [ ] 使用 `createClient()` 后是否调用 `self::getClient($client)`？
-   - [ ] 断言方法是否依赖静态客户端？
-
-3. **DataProvider 迁移**
-   - [ ] 是否使用了 `#[DataProvider]` 属性而非 `@dataProvider` 注解？
-   - [ ] DataProvider 方法是否为 `static`？
-
-4. **路由配置**
-   - [ ] 测试环境是否加载了所需路由？
-   - [ ] 是否需要接受 404 或 405 状态码？
-
-5. **类型安全**
-   - [ ] 表单值是否会被转换为 null？
-   - [ ] setter 是否要求非 null 类型？
-
-**使用建议**：
-- 第 1 次失败：按清单快速排查
-- 第 2 次失败：启动 Codex MCP 协作（使用"测试失败诊断模板"）
-- 第 3 次失败：升级问题，寻求人工支援
-
 ## 异常处理
 
 - 质量门不可达：记录环境限制，必要时暂停并请求资源支持。
 - 静态分析修复导致测试失败：优先适配测试，严禁回退修复（参见语言/工具技能中的最佳实践）。
-- 自愈失败或出现高风险问题：升级讨论，必要时结合 `method/context-snapshot` 输出现状摘要后终止。
-- 批次执行冲突：参考 `method/parallel-task-coordination` 冲突处理策略，必要时降低并行度。
+- 自愈失败或出现高风险问题：升级讨论，必要时结合 @.claude/skills/method/context-snapshot/SKILL.md 输出现状摘要后终止。
+- 批次执行冲突：参考 @.claude/skills/method/parallel-task-coordination/SKILL.md 冲突处理策略，必要时降低并行度。
