@@ -1,21 +1,25 @@
 ---
 name: js-react-state-management
-description: 规划 React 应用的数据层，涵盖状态分层、数据源同步、缓存与性能优化。
+description: 当需要规划 React 应用的数据层，处理状态分层、数据源同步、缓存与性能优化时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # React 状态管理技能
 
 ## 适用场景
+
 - 中大型 React 应用需要明确数据来源、状态归属、同步策略。
 - 多数据源（REST/GraphQL/WebSocket）协同，需避免重复请求与不必要渲染。
 - 设计跨页面/组件共享状态、派生数据、缓存与离线策略。
 
 ## 前置准备
+
 - 了解业务数据模型、接口契约、缓存要求。
 - 明确当前框架（Next.js/Vite）、状态工具（Context、Redux Toolkit、Zustand、React Query 等）。
 - 配置 TypeScript 严格模式，准备 `zod`/`valibot` 等数据校验库。
 
 ## 操作步骤
+
 1. **状态分层**
    - 按作用域划分：局部 UI 状态（组件内）、视图范围（页面）、全局业务状态（store）。
    - 使用函数式更新、不可变数据，避免嵌套对象直接修改。
@@ -46,16 +50,19 @@ description: 规划 React 应用的数据层，涵盖状态分层、数据源同
    - 使用日志工具记录关键状态变更（可在开发环境启用）。
 
 ## 质量校验
+
 - 单元/组件测试覆盖状态逻辑，使用 Testing Library + Hook 测试。
 - E2E 测试验证状态持久化、回退、恢复流程。
 - Lint/TypeScript 无错误；React Query devtools、Profiler 指标稳定。
 
 ## 失败与回滚
+
 - 状态树膨胀：重新拆分 store，回滚引入状态的数据结构。
 - 性能下降：收集 profile 数据，恢复最近一次改动并逐项分析。
 - 缓存失效或数据不一致：撤销缓存策略，启用安全默认值并补充校验。
 
 ## 交付物
+
 - 状态图（Mermaid）：数据源、store、组件之间的关系。
 - Store 定义、API 客户端、同步策略说明。
 - 测试与性能报告、调试工具配置。

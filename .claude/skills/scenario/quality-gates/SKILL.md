@@ -1,6 +1,7 @@
 ---
 name: scenario-quality-gates
-description: 在交付前执行统一质量门，确保格式、静态分析、测试、依赖、构建检查按目标路径执行。
+description: 当需要在交付前执行统一质量门，确保格式、静态分析、测试、依赖与构建检查达标时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 质量门执行技能
@@ -17,7 +18,7 @@ description: 在交付前执行统一质量门，确保格式、静态分析、�
 - 收集所需命令（语言工具清单、环境变量、测试配置）。
 - 工作区干净，必要的服务（数据库、缓存）已就绪。
 
-+ 若存在 `method-business-impact-engineering` 输出，收集对应指标阈值、护栏、灰度放量与回滚条件。
+- 若存在 `method-business-impact-engineering` 输出，收集对应指标阈值、护栏、灰度放量与回滚条件。
 
 ### Symfony DI 配置变更检查点
 

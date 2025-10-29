@@ -1,21 +1,25 @@
 ---
 name: php-symfony-entity-repository
-description: 设计与维护 Symfony + Doctrine 的实体与仓储层，确保数据模型、映射与查询符合性能与可维护性要求。
+description: 当需要设计与维护 Symfony + Doctrine 的实体与仓储层，确保数据模型、映射与查询兼顾性能与可维护性时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # Symfony 实体与仓储技能
 
 ## 适用场景
+
 - 新增/修改 Doctrine 实体、关系、枚举、嵌入对象。
 - 设计仓储接口、查询方法、批处理，消除 N+1。
 - 保障实体契约、迁移、测试与回滚策略。
 
 ## 前置准备
+
 - 熟悉目标域的数据模型、约束、现有迁移。
 - `vendor/bin/doctrine` 可执行，数据库连接可用。
 - 确认代码目录：`src/Domain/*/Entity`, `src/Domain/*/Repository`。
 
 ## 操作步骤
+
 1. **数据建模**
    - 使用 PHP Attribute 或注解定义字段类型、长度、默认值。
    - 引入值对象：`@ORM\Embedded`，避免散乱原始类型。
@@ -44,16 +48,19 @@ description: 设计与维护 Symfony + Doctrine 的实体与仓储层，确保�
    - 对关键查询提供数据量基准测试，观察 SQL 数量。
 
 ## 质量校验
+
 - `doctrine:mapping:info`, `doctrine:schema:validate` 均为 OK。
 - `phpstan`, `phpunit` 覆盖实体、仓储逻辑。
 - 无新增 Baseline 忽略，N+1 被测试用例捕捉。
 
 ## 失败与回滚
+
 - 迁移上线失败：执行 down SQL 或恢复备份。
 - 查询性能下降：立即回滚代码，记录慢查询，重新设计索引。
 - 实体破坏兼容：维护变更日志，提供数据补救脚本。
 
 ## 交付物
+
 - 实体/仓储设计文档（字段表、关系图、查询说明）。
 - 迁移脚本、SQL 审核结果、回滚方案。
 - 集成测试与性能测试报告。

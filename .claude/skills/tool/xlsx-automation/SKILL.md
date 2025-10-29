@@ -1,18 +1,35 @@
 ---
 name: xlsx-automation
 description: 使用 openpyxl、pandas 与 LibreOffice 完成 Excel 文件的创建、编辑、公式校验与财务建模。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 license: 专有协议，详见 LICENSE.txt
 ---
 
 # XLSX 工作簿创建、编辑与分析指南
 
+## 适用场景
+
+- 新建财务模型、运营报表、分析仪表或批量数据导入输出。
+- 维护现有模板，对公式、格式、样式进行精准修改并保持一致性。
+- 对外部提供的 Excel 进行质量审计、错误排查、数据抽取。
+- 需要通过脚本自动化生成/更新多张工作表并保证公式正确。
+
+## 前置准备
+
+- 安装 Python 库：`pandas`, `openpyxl`, `numpy`, `xlrd`, `defusedxml`（处理宏或 XML 时使用）。
+- 安装 LibreOffice（供 `recalc.py` 调用）并确保命令 `soffice` 可用。
+- 准备临时目录与备份策略：复制原始工作簿或创建 Git 分支，防止脚本误写导致损坏。
+- 获取业务规则、格式规范、单位说明、数据来源与期望输出；如涉及财务模型，收集来源文档链接。
+
 ## 输出要求
 
 ### 通用规范
+
 - **零公式错误**：交付文件必须无 `#REF!`、`#DIV/0!`、`#VALUE!`、`#N/A`、`#NAME?` 等错误。
 - **尊重既有模板**：修改已有模板时需完全遵循原有格式、配色、命名；如有冲突以模板规则优先。
 
 ### 财务模型专用规范
+
 - **颜色约定**：
   - 蓝色（RGB 0,0,255）：手动输入与场景分析参数。
   - 黑色（RGB 0,0,0）：全部公式与计算结果。
@@ -40,9 +57,18 @@ license: 专有协议，详见 LICENSE.txt
 
 > **公式重算依赖 LibreOffice**：`recalc.py` 脚本首次运行会自动配置 LibreOffice，请确保环境已安装。
 
+## 操作步骤
+
+1. **判定任务类型**：确认是数据处理、模板编辑、财务建模还是质量审计，选择合适库与工具。
+2. **准备输入**：复制原始工作簿、导入原始数据源、加载模板规范与假设文档。
+3. **脚本化编辑**：使用 pandas/openpyxl 按章节示例操作，所有计算尽量写入 Excel 公式。
+4. **重算与校验**：运行 `recalc.py`，解读 JSON 输出，迭代修复直至 `status: success`。
+5. **审计与交付**：执行公式验证清单，生成检查记录，打包最终文件、脚本、回滚资料。
+
 ## 数据读取与分析
 
 ### pandas 快速操作
+
 ```python
 import pandas as pd
 
@@ -57,6 +83,7 @@ df.to_excel('output.xlsx', index=False)
 ## Excel 工作流
 
 ### 核心原则：始终使用 Excel 公式
+
 禁止在 Python 中计算结果后硬编码，确保源数据变化时工作簿可自动更新。
 
 ```python
@@ -71,23 +98,28 @@ sheet['D20'] = '=AVERAGE(D2:D19)'
 ```
 
 ### 常规流程
+
 1. 选库：数据处理用 pandas；需公式/格式则用 openpyxl。
 2. 创建或加载工作簿。
 3. 编辑数据、公式、格式。
 4. 保存文件。
 5. **若包含公式，必须运行重算脚本**：
+
    ```bash
    python recalc.py output.xlsx
    ```
+
 6. 根据脚本返回的 JSON 修复错误，再次重算直至 `status: success`。
 
 常见错误说明：
+
 - `#REF!`：引用无效。
 - `#DIV/0!`：除零。
 - `#VALUE!`：数据类型错误。
 - `#NAME?`：公式名拼写错误或功能未启用。
 
 ### 新建工作簿示例
+
 ```python
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -109,6 +141,7 @@ wb.save('output.xlsx')
 ```
 
 ### 修改现有工作簿
+
 ```python
 from openpyxl import load_workbook
 
@@ -138,6 +171,7 @@ python recalc.py output.xlsx 30
 ```
 
 脚本功能：
+
 - 首次运行自动配置 LibreOffice 宏。
 - 重算所有工作表公式。
 - 扫描并统计所有错误，返回 JSON。
@@ -146,11 +180,13 @@ python recalc.py output.xlsx 30
 ## 公式验证清单
 
 ### 基础检查
+
 - [ ] 抽查 2–3 个引用单元格，确认指向正确。
 - [ ] 核对列号（Excel 第 64 列为 `BL` 而非 `BK`）。
 - [ ] 记得行号从 1 开始（DataFrame 行 5 对应 Excel 行 6）。
 
 ### 常见踩坑
+
 - [ ] 使用 `pd.notna()` 处理空值。
 - [ ] FY 列通常在 50 列以后，注意索引。
 - [ ] 查询多次匹配时要全局搜索。
@@ -158,11 +194,13 @@ python recalc.py output.xlsx 30
 - [ ] 核对跨表引用格式，如 `Sheet1!A1`。
 
 ### 测试策略
+
 - [ ] 小范围试算，再向下填充。
 - [ ] 检查公式依赖的所有单元格是否存在。
 - [ ] 用 0、负数、极大值验证稳定性。
 
 ### 读取 `recalc.py` 输出
+
 ```json
 {
   "status": "success",
@@ -176,31 +214,51 @@ python recalc.py output.xlsx 30
   }
 }
 ```
+
 当 `status` 为 `errors_found` 时，根据 `error_summary` 定位修复。
 
 ## 最佳实践
 
 ### 库选择
+
 - `pandas`：批量数据处理、统计分析、导入导出。
 - `openpyxl`：精细格式、公式编写、工作表结构操作。
 
 ### openpyxl 注意事项
+
 - 行列索引从 1 开始。
 - 读取公式结果需 `data_only=True`，但保存时会丢失公式，谨慎使用。
 - 大文件读写使用 `read_only=True` 或 `write_only=True`。
 - 公式仅存储字符串，需配合 `recalc.py` 重算。
 
 ### pandas 注意事项
+
 - 指定列类型避免推断错误：`dtype={'id': str}`。
 - 大文件可指定列：`usecols=['A', 'C', 'E']`。
 - 日期列使用 `parse_dates`。
 
+## 质量校验
+
+- `recalc.py` 输出必须为 `status: success`，`total_errors` 为 0；若发现错误，需记录定位方法与修复过程。
+- 在 Excel/LibreOffice 中切换“显示公式”视图抽查关键单元格，确认不存在硬编码或断链引用。
+- 对财务模型执行场景切换、边界值测试，核对颜色、格式、单位等规范是否契合。
+- 将 `公式验证清单` 的勾选结果与截图/日志写入交付说明，确保可追溯。
+
+## 失败与回滚
+
+- 一旦出现公式错误或文件损坏，立即恢复备份或 Git 版本，禁止在异常文件上继续迭代。
+- 脚本写入导致格式或命名区域丢失时，回退至上一版本，拆分步骤并加入保护（锁定单元格/备份工作表）。
+- LibreOffice 重算失败或长时间卡住，检查依赖与宏权限；必要时在本地 GUI 手动重算，再重新运行脚本输出。
+- 若误将硬编码写入公式区域，撤销该批次输出，重新梳理假设区与公式区，确保引用链清晰。
+
 ## 代码风格
+
 - Python 脚本保持精简、无冗余日志。
 - 复杂公式处在单元格内添加注释或旁注说明来源。
 - 对硬编码数值记录来源与更新时间。
 
 ## 交付物
+
 - 更新后的 Excel 文件、相关脚本或 Notebook。
 - `recalc.py` 输出日志与错误处理记录。
 - 若涉及财务模型，提供假设说明与回滚方案。

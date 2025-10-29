@@ -1,21 +1,25 @@
 ---
 name: rust-core-crate
-description: 构建与维护 Rust crate，关注模块组织、所有权、错误处理与性能优化。
+description: 当需要构建与维护 Rust crate，兼顾模块组织、所有权、错误处理与性能优化时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # Rust 核心 Crate 技能
 
 ## 适用场景
+
 - 新建或维护 Rust 库/服务，管理模块、依赖、特性。
 - 处理所有权/借用问题、生命周期、unsafe 审查。
 - 优化性能、减少编译时间、发布 crate。
 
 ## 前置准备
+
 - 安装 Rust 工具链：`rustup toolchain install stable`。
 - 熟悉项目结构：`Cargo.toml`, `src/lib.rs`, `src/bin/*`.
 - 启用 Clippy、Rustfmt、Cargo Check 等质量门。
 
 ## 操作步骤
+
 1. **项目布局**
    - `lib.rs` 中导出公共 API；内部模块放 `mod`.
    - 对二进制 crate 使用 `src/main.rs` 或 `src/bin/*.rs`.
@@ -40,16 +44,19 @@ description: 构建与维护 Rust crate，关注模块组织、所有权、错�
    - `cargo publish --dry-run` 验证清单。
 
 ## 质量校验
+
 - `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test --all`.
 - `cargo doc` 无警告，公开 API 注释齐全。
 - 基准测试指标满足要求。
 
 ## 失败与回滚
+
 - 编译器错误无法解决：最小化复现，必要时回退变更。
 - 性能优化失效：保留优化前数据，回滚并重新评估。
 - 发布失败：使用 `cargo yank` 撤回错误版本。
 
 ## 交付物
+
 - Crate 模块图、特性说明。
 - 质量门执行记录、基准测试报告。
 - 发布/回滚步骤与文档链接。

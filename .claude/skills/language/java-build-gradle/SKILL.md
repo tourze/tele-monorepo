@@ -1,6 +1,7 @@
 ---
 name: java-build-gradle
-description: 管理 Gradle 构建、依赖、模块化与性能调优，支持多模块项目。
+description: 当需要管理 Gradle 构建、依赖、模块化与性能调优，尤其是在多模块项目中保持一致性时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # Gradle 构建技能

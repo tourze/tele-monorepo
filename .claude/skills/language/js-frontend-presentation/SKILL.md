@@ -1,21 +1,25 @@
 ---
 name: js-frontend-presentation
-description: 规划前端表现层，包括组件拆分、设计系统对齐、可访问性与视觉一致性。
+description: 当需要规划前端表现层，确保组件拆分、设计系统对齐、可访问性与视觉一致性时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 前端表现层技能
 
 ## 适用场景
+
 - 构建视图组件、页面布局、设计系统实现。
 - 处理响应式布局、主题、动画、可访问性。
 - 确保视觉一致、代码易读、样式可维护。
 
 ## 前置准备
+
 - 获取设计稿（Figma）、设计令牌（Design Tokens）、组件规范。
 - 确认样式方案（CSS Modules、Tailwind、Chakra、styled-components 等）。
 - 准备 Storybook 或组件文档工具，建立展示与对比环境。
 
 ## 操作步骤
+
 1. **组件分层**
    - 依据 Atomic Design 或团队约定划分：基础组件（atoms）、复合组件（molecules）、页面容器（organisms/page）。
    - 表现组件只负责渲染；业务逻辑放在上层容器或 Hook。
@@ -44,17 +48,20 @@ description: 规划前端表现层，包括组件拆分、设计系统对齐、�
    - 维护组件 API 文档（Props、Slot、事件）。
 
 ## 质量校验
+
 - 组件测试（Testing Library / Storybook interaction）验证交互与样式。
 - 可访问性检测通过（Accessibility Audit、jest-axe）。
 - Lighthouse/Web Vitals 保持在绿线（LCP < 2.5s、CLS < 0.1）。
 - 无重复 CSS、无未使用样式，打包体积在阈值内。
 
 ## 失败与回滚
+
 - 设计偏差：及时与设计师同步；必要时回滚样式改动，记录差异。
 - 可访问性不合规：修复语义、焦点或对比度问题，重新审查。
 - 样式冲突或回归：启用可视对比/截图测试，恢复之前版本并拆分提交。
 
 ## 交付物
+
 - 组件文档（Storybook 链接、Props 表）、设计对齐报告。
 - 样式/主题定义、Design Token 文件。
 - 可访问性与性能测试结果（Lighthouse、jest-axe）。

@@ -1,6 +1,7 @@
 ---
 name: method-parallel-task-coordination
-description: 指导复杂任务的并行化拆分、依赖识别、冲突处理与调度优化。
+description: 当需要拆分并行任务、识别依赖、处理冲突并优化调度时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 并行任务协调技能

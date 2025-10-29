@@ -1,14 +1,37 @@
 ---
 name: pdf-automation
 description: 使用 Python 与命令行工具完成 PDF 的读取、合并、拆分、表单填写与批量生成。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 license: 专有协议，详见 LICENSE.txt
 ---
 
 # PDF 处理指南
 
-## 概述
+## 适用场景
 
-当需要批量处理 PDF（提取文本/表格、生成新文档、拆分合并、填表）时启用本技能。指南涵盖常用 Python 库与命令行工具。高级用法、JavaScript 方案请参考 `reference.md`，表单填写流程请阅读 `forms.md`。
+- 批量提取 PDF 文本、表格、元数据，或执行 OCR。
+- 合并、拆分、压缩、加密、加水印等批量文档操作。
+- 生成新 PDF（报告、模板）、批量填表、转换格式。
+- 对法律/金融文档执行精准修改并需生成审计日志。
+
+当需要上述能力时启用本技能。高级用法、JavaScript 方案请参考 `reference.md`，表单填写流程请阅读 `forms.md`。
+
+## 前置准备
+
+- 安装并验证工具链：
+  - Python 库：`pypdf`, `pdfplumber`, `reportlab`, `pytesseract`, `pdf2image`, `pandas`
+  - 命令行工具：`poppler-utils`（pdftotext, pdfimages）, `qpdf`, `pdftk`（如可用）
+- 确认操作环境具备足够磁盘空间与字体、编码支持，避免路径含空格造成脚本失败。
+- 对生产或敏感文档操作前，复制到临时目录并保留原件或快照，可结合版本控制记录变更。
+- 明确目标输出（合并文档、提取数据、转图片等）与质量标准，准备验证脚本或校验清单。
+
+## 操作步骤
+
+1. **规划任务**：根据需求选择对应章节（Python 库、命令行工具、OCR、生成/填表）。
+2. **准备资源**：下载/复制源 PDF，校验可读性（密码、加密、损坏），必要时使用 `qpdf --decrypt`。
+3. **执行脚本或命令**：按章节示例操作，分批处理并记录命令/脚本及输出路径。
+4. **验证结果**：使用文本 diff、PDF 阅读器、`pdftotext`、图像预览等方式确认符合预期。
+5. **归档与交付**：整理最终 PDF、日志、临时文件及回滚资料，更新交付说明。
 
 ## 快速入门
 
@@ -30,6 +53,7 @@ for page in reader.pages:
 ### pypdf —— 基础操作
 
 #### 合并 PDF
+
 ```python
 from pypdf import PdfWriter, PdfReader
 
@@ -44,6 +68,7 @@ with open("merged.pdf", "wb") as output:
 ```
 
 #### 拆分 PDF
+
 ```python
 reader = PdfReader("input.pdf")
 for i, page in enumerate(reader.pages):
@@ -54,6 +79,7 @@ for i, page in enumerate(reader.pages):
 ```
 
 #### 提取元数据
+
 ```python
 reader = PdfReader("document.pdf")
 meta = reader.metadata
@@ -64,6 +90,7 @@ print(f"Creator: {meta.creator}")
 ```
 
 #### 旋转页面
+
 ```python
 reader = PdfReader("input.pdf")
 writer = PdfWriter()
@@ -79,6 +106,7 @@ with open("rotated.pdf", "wb") as output:
 ### pdfplumber —— 文本与表格提取
 
 #### 按版面提取文本
+
 ```python
 import pdfplumber
 
@@ -89,6 +117,7 @@ with pdfplumber.open("document.pdf") as pdf:
 ```
 
 #### 提取表格
+
 ```python
 with pdfplumber.open("document.pdf") as pdf:
     for i, page in enumerate(pdf.pages):
@@ -100,6 +129,7 @@ with pdfplumber.open("document.pdf") as pdf:
 ```
 
 #### 高级表格处理
+
 ```python
 import pandas as pd
 
@@ -120,6 +150,7 @@ if all_tables:
 ### reportlab —— 生成 PDF
 
 #### 创建基础 PDF
+
 ```python
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -135,6 +166,7 @@ c.save()
 ```
 
 #### 多页文档
+
 ```python
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
@@ -160,6 +192,7 @@ doc.build(story)
 ## 命令行工具
 
 ### pdftotext（poppler-utils）
+
 ```bash
 pdftotext input.pdf output.txt              # 文本提取
 pdftotext -layout input.pdf output.txt      # 保留布局
@@ -167,6 +200,7 @@ pdftotext -f 1 -l 5 input.pdf output.txt    # 指定页码
 ```
 
 ### qpdf
+
 ```bash
 qpdf --empty --pages file1.pdf file2.pdf -- merged.pdf  # 合并
 qpdf input.pdf --pages . 1-5 -- pages1-5.pdf            # 拆分 1-5 页
@@ -175,6 +209,7 @@ qpdf --password=mypassword --decrypt encrypted.pdf decrypted.pdf  # 解密
 ```
 
 ### pdftk（若已安装）
+
 ```bash
 pdftk file1.pdf file2.pdf cat output merged.pdf   # 合并
 pdftk input.pdf burst                             # 拆分
@@ -184,6 +219,7 @@ pdftk input.pdf rotate 1east output rotated.pdf   # 旋转
 ## 常见任务
 
 ### 识别扫描版 PDF（OCR）
+
 ```python
 # 依赖：pip install pytesseract pdf2image
 import pytesseract
@@ -200,6 +236,7 @@ print(text)
 ```
 
 ### 添加水印
+
 ```python
 from pypdf import PdfReader, PdfWriter
 
@@ -216,12 +253,14 @@ with open("watermarked.pdf", "wb") as output:
 ```
 
 ### 导出嵌入图片
+
 ```bash
 pdfimages -j input.pdf output_prefix
 # 生成 output_prefix-000.jpg、output_prefix-001.jpg 等
 ```
 
 ### 设置密码
+
 ```python
 from pypdf import PdfReader, PdfWriter
 
@@ -236,6 +275,27 @@ writer.encrypt("userpassword", "ownerpassword")
 with open("encrypted.pdf", "wb") as output:
     writer.write(output)
 ```
+
+## 质量校验
+
+- 使用 `pdftotext`、`pdfinfo` 或 PDF 阅读器确认生成/修改后的文件可正常打开，页数、大小、编码符合预期。
+- 对合并/拆分结果进行人工抽检，确保顺序、页码、目录正确；必要时生成 SHA 校验值记录。
+- 对 OCR、表格提取等数据加工任务，验证样本结果并与原文比对，记录识别准确率与异常项。
+- 表单填写或加密操作完成后，重新加载文件确认字段值与权限设置生效。
+
+## 交付物
+
+- 最终 PDF 文件、脚本与命令执行日志（包含输入输出路径）。
+- 数据提取结果（CSV/Excel/JSON）及质量抽检记录。
+- 若执行表单填写或批量处理，附批次汇总表、错误清单与处理结论。
+- 回滚素材：原始文件备份、临时目录或中间产物的索引，确保可快速恢复。
+
+## 失败与回滚
+
+- 发现输出文件损坏或内容缺失时，立即删除失败结果，恢复至备份并重新执行；必要时改用其他库（如 pdfminer.six）。
+- 合并/拆分过程中脚本异常，记录日志并缩小批次；确保每批次都有原文件副本可还原。
+- OCR 或表格提取质量过低，回退到原 PDF，调整分辨率、图像预处理或引入人工校对。
+- 若命令行工具缺失或版本不兼容，先修复环境或切换替代方案，再继续批量处理。
 
 ## 速查表
 

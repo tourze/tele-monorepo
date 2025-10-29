@@ -1,21 +1,32 @@
 ---
 name: php-tool-composer
 description: 管理 Composer 依赖与脚本，强调权限协作、命令使用及禁止自动执行高风险操作。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # Composer 管理技能
 
 ## 适用场景
+
 - 查看依赖、约束、脚本，规划升级或安全修复。
 - 为特定包执行 `require`、`remove`、`update` 前的分析与沟通。
 - 处理平台要求、锁文件、自动加载、脚本执行策略。
 
+## 前置准备
+
+- 确认当前 PHP 版本、扩展以及 `composer` 版本满足项目要求，必要时运行 `composer check-platform-reqs`。
+- 备份 `composer.json` 与 `composer.lock`，或创建 Git 分支/标签，确保可随时回滚。
+- 收集需求背景：目标包、版本区间、风险等级、上线窗口、关联服务。
+- 对齐协作策略：明确哪些命令可由 AI 提供指引，哪些必须人工执行。
+
 ## 红线提示
+
 - **禁止 AI 主动执行 `composer install`、`composer update`、`composer require` 等写操作命令。**
 - 如确需安装或更新依赖，必须明确告知维护者命令与影响，交由人工执行。
 - 只允许执行只读命令（例如 `composer show`, `composer validate`, `composer outdated`）或在用户确认后生成指引。
 
 ## 常用安全命令
+
 | 命令 | 说明 |
 | ---- | ---- |
 | `composer validate --no-check-lock` | 校验 `composer.json` 语法与配置 |
@@ -25,7 +36,8 @@ description: 管理 Composer 依赖与脚本，强调权限协作、命令使用
 | `composer check-platform-reqs` | 确认运行环境满足平台要求 |
 | `composer dump-autoload --classmap-authoritative` | 生成优化后的自动加载文件（需评估风险） |
 
-## 操作流程（建议）
+## 操作步骤（建议）
+
 1. **需求梳理**
    - 明确依赖升级/新增的目的、范围、风险。
    - 检查是否涉及多包联动或发布计划。
@@ -43,17 +55,20 @@ description: 管理 Composer 依赖与脚本，强调权限协作、命令使用
    - 更新 `CHANGELOG` 或依赖说明，记录风险。
 
 ## 质量校验
+
 - `composer validate` 通过，锁文件状态与预期一致。
 - 自动加载器生成成功，无类找不到的错误。
 - 相关质量门（静态分析、测试）全部通过。
 
 ## 失败与回滚
+
 - 依赖冲突：记录冲突包与约束，提出替代方案。
 - `composer.lock` 冲突：保留冲突文本，交由维护者手动合并。
 - 平台要求不满足：提醒调整 PHP/扩展版本或使用 polyfill。
 - 安装失败或引入兼容性问题：恢复锁文件备份，撤销改动。
 
 ## 交付物
+
 - 分析记录：依赖树、过期列表、安全审计结果。
 - 命令建议与执行顺序（交由人工执行）。
 - 验证报告（质量门、测试结果）与回滚策略。

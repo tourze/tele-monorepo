@@ -1,21 +1,25 @@
 ---
 name: js-tool-eslint
 description: 使用 ESLint 保障 JavaScript/TypeScript 代码质量，覆盖配置分层、常见规则与技术债清理。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # ESLint 技能
 
 ## 适用场景
+
 - 在指定目录运行 ESLint，确保无错误与无忽略。
 - 配置规则、覆盖、插件，适配 React/TypeScript。
 - 清理现有 lint 技术债，建立持续治理策略。
 
 ## 前置准备
+
 - `node_modules` 已安装，对应 `eslint` 版本与插件齐全。
 - 了解项目的 `.eslintrc.*` 层级（根目录、包内、CI 专用）。
 - 明确目标路径，例如 `packages/ui/`、`apps/dashboard/`。
 
 ## 操作步骤
+
 1. **命令执行**
    - `npx eslint packages/ui --ext .ts,.tsx --max-warnings=0`.
    - 对 monorepo 使用 `pnpm eslint --filter <pkg>` 或 `nx lint <proj>`。
@@ -35,16 +39,19 @@ description: 使用 ESLint 保障 JavaScript/TypeScript 代码质量，覆盖配
    - 以规则为维度拆分提交：先清理语法类，再处理风格或复杂规则。
 
 ## 质量校验
+
 - 目标路径输出 `0 problems`，无 error/warning。
 - 在 CI 中开启 `--max-warnings=0`，确保 warning 被视为错误。
 - 补充对应测试或类型校验，验证修复未引入回归。
 
 ## 失败与回滚
+
 - 插件冲突或版本不兼容：锁定依赖版本，研判需要升级还是降级。
 - 自动修复破坏格式：运行 Prettier 重整；必要时回滚并手动处理。
 - 临时禁用规则：在 `overrides` 中限定文件范围并标注清理计划。
 
 ## 交付物
+
 - Lint 执行记录（命令、路径、输出摘要）。
 - 修复策略说明：列出触及的规则与改动方式。
 - 若调整配置，附带变更 diff 与验证命令。

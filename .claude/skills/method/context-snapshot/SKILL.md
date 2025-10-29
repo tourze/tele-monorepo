@@ -1,6 +1,7 @@
 ---
 name: method-context-snapshot
-description: 提炼会话历史生成结构化快照，提供标准化 XML 输出。
+description: 当需要提炼会话历史并生成结构化快照，输出标准化 XML 表达时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 会话快照技能

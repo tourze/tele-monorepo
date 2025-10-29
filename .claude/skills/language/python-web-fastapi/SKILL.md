@@ -1,21 +1,25 @@
 ---
 name: python-web-fastapi
 description: 使用 FastAPI 构建后端服务，聚焦依赖注入、Pydantic 模型、路由、异步与测试。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # FastAPI Web 技能
 
 ## 适用场景
+
 - 新建或维护 FastAPI 项目，需要统一代码结构与质量门。
 - 设计 Pydantic 模型、依赖注入、路由与权限。
 - 调试性能、并发、错误处理及自动文档。
 
 ## 前置准备
+
 - 已安装 `fastapi`, `uvicorn`, `pydantic`, `httpx` 等依赖。
 - 目录结构遵循分层：`app/main.py`, `app/api`, `app/services`, `app/models`.
 - 配置 `.env`、`settings.py` 或 `pydantic.BaseSettings`。
 
 ## 操作步骤
+
 1. **应用结构**
    - `app/main.py` 创建 `FastAPI` 实例，注册路由、事件、middleware。
    - 使用 `APIRouter` 按业务模块拆分，路由文件放置在 `app/api/routes`.
@@ -38,16 +42,19 @@ description: 使用 FastAPI 构建后端服务，聚焦依赖注入、Pydantic �
    - 捕获 SQL/外部服务异常，记录 traceId。
 
 ## 质量校验
+
 - `ruff`, `mypy`, `pytest -q`, `coverage` 达标。
 - 使用 `uvicorn --reload` 本地验证，确保无未处理异常。
 - OpenAPI schema 校验：`python -m jsonschema` 或 `prance lint`.
 
 ## 失败与回滚
+
 - 依赖注入失效：复查 `Depends` 顺序，必要时回退改动。
 - 性能下降：使用 `uvicorn --reload` + Profiling；回滚调整并记录数据。
 - 部署失败：检查 `uvicorn/gunicorn` 命令，恢复旧版本镜像。
 
 ## 交付物
+
 - FastAPI 模块清单（路由、服务、模型）。
 - 测试报告与覆盖率、OpenAPI 文档。
 - 部署命令、监控与回滚说明。

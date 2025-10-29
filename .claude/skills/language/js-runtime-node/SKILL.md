@@ -1,21 +1,25 @@
 ---
 name: js-runtime-node
 description: 理解 Node.js/V8 运行时与事件循环，用于处理异步、性能、内存与进程管理问题。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # Node.js 运行时技能
 
 ## 适用场景
+
 - 分析事件循环行为、任务队列、Promise 处理顺序。
 - 排查 CPU 密集型任务阻塞、内存泄漏、文件句柄耗尽等问题。
 - 配置 Node 进程参数、Cluster/PM2、Docker 容器资源。
 
 ## 前置准备
+
 - 安装目标 Node 版本，使用 `nvm` 或 `asdf` 管理多版本。
 - 了解应用入口脚本与依赖（`package.json`）。
 - 具备对生产/预发环境的监控与日志访问权限。
 
 ## 操作步骤
+
 1. **版本与依赖**
    - `node -v`、`npm ls`/`pnpm list` 记录版本。
    - 检查 `engines` 字段与锁文件是否一致。
@@ -38,16 +42,19 @@ description: 理解 Node.js/V8 运行时与事件循环，用于处理异步、�
    - SIGTERM 处理：监听 `process.on('SIGTERM')`，执行优雅关闭。
 
 ## 质量校验
+
 - 使用 `npm run lint`、`npm test` 验证修改未破坏质量门。
 - 通过 `node --check app.js` 检查语法（ESM/TS 需 Transpile）。
 - 对关键路径添加性能基线：记录 RED 指标（Rate/Error/Duration）。
 
 ## 失败与回滚
+
 - 参数调整导致性能下滑时恢复旧参数，再排查根因。
 - 监控指标恶化立即回滚部署，保留 heap/cpu profile 供后续分析。
 - Cluster/PM2 配置回滚至上一版 JSON/JS 文件，reload 服务。
 
 ## 交付物
+
 - 运行时诊断报告：版本、配置、事件循环分析结果。
 - 调优方案与监控对比数据。
 - 回滚步骤与后续观察项。

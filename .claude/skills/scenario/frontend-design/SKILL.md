@@ -1,34 +1,57 @@
 ---
 name: scenario-frontend-design
-description: 推进前端 CRD 设计，在通用功能设计基础上，补充前端特有的组件、状态与交互方案。
+description: 当需要推进前端 CRD 设计，在通用功能设计基础上补充组件、状态与交互方案时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 前端设计技能 (CRD)
 
 ## 适用场景
+
 - 针对前端特性或组件库进行详细设计，输出 CRD (Component Requirement Document)。
 - 在通用设计流程基础上，补充前端领域的设计细节。
 
+## 前置准备
+
+- 已完成 `scenario/feature-design` 的 Value Brief、范围与验收标准，并获得主要干系人认可。
+- 收集现有设计系统规范（色板、排版、组件库）、可访问性要求以及品牌约束。
+- 准备技术栈资料：框架版本、状态管理方案、数据源契约、API Mock 或 Swagger。
+- 约定 CRD 输出形式（Markdown + Mermaid + 表格），并在仓库创建 `crd/<feature>/` 目录存放资产。
+
 ## 与通用设计的关系
+
 本技能遵循 `scenario/feature-design` 的核心流程，包括商业价值对齐、风险评估、计划与验收标准定义。在此基础上，本技能专注于前端特有的设计产出。
 
-## 前端专属设计要点
-1.  **组件与页面逻辑**
-    *   使用 Mermaid 绘制组件树，明确组件层级、复用关系和数据流。
-    *   定义组件的 Props、State、Slots 和对外暴露的事件。
-2.  **状态管理方案**
-    *   依据 `language/js-react-state-management` 技能，明确全局状态、视图状态和局部状态的归属。
-    *   设计 Store 结构、Action、Selector，以及与后端 API 的同步策略。
-3.  **API 契约**
-    *   定义前端所需的数据结构、接口路径、请求/响应格式，作为与后端的契约。
-4.  **交互与视觉**
-    *   引用 `language/js-frontend-presentation` 技能，对齐设计系统、a11y (可访问性) 和视觉表现。
-    *   使用 `scenario/prd-visual-optimizer` 确保图表与表格一致。
+## 操作步骤
+
+1. **继承通用设计成果**
+   - 将 `feature-design` 的背景、范围、验收标准同步到 CRD 首页。
+   - 标记前端特有的风险、假设与质量门，明确需要补充的评审项。
+2. **组件与页面拆解**
+   - 使用 Mermaid 绘制组件树，标出容器组件、展示组件、跨页面复用单元。
+   - 为每个组件定义 Props、State、Slots、事件回调，注明来源与去向。
+3. **状态与数据流规划**
+   - 参考 `language/js-react-state-management`，划分全局状态、视图状态、局部状态，并指明 Store/Hook 归属。
+   - 定义数据流与缓存策略，说明与后端 API、WebSocket 或本地存储的同步方式。
+4. **API 契约与交互细节**
+   - 起草前端视角的接口契约（路径、方法、请求/响应、错误码），与后端协商一致。
+   - 依据 `language/js-frontend-presentation` 制定交互、动效、可访问性要求；引用 `scenario/prd-visual-optimizer` 对齐图表/表格表现。
+5. **评审与版本管理**
+   - 输出 CRD 文档与附属图表，组织设计评审，收集反馈并形成版本记录。
+   - 将评审决议同步到任务板与实现计划，确保后续开发引用同一版本。
 
 ## 质量校验
+
 - CRD 包含完整的组件树、状态流图、API 契约和 a11y 要求。
 - 设计遵循 `feature-design` 的所有质量门，并额外通过前端设计评审。
 
 ## 交付物
+
 - 继承自 `feature-design` 的所有交付物。
 - **额外**: 完整的 CRD 文档、组件 API 定义、状态管理方案图。
+
+## 失败与回滚
+
+- 评审反馈指向组件树或状态划分错误时，回滚至上一版本 CRD，重新梳理信息架构并更新图表。
+- 若 API 契约与后端方案不一致，应暂停交付，回到契约协商阶段，待确认后再更新 CRD。
+- 可访问性或设计系统校验失败时，恢复到通过校验的版本，追加问题列表与整改计划，确保上线前闭环。

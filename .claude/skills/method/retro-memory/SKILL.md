@@ -1,6 +1,7 @@
 ---
 name: method-retro-memory
-description: 任务完成后反思并迭代记忆文件，确保经验沉淀与改进建议落实。
+description: 当需要在任务完成后复盘并迭代记忆文件，沉淀经验与改进建议时，请加载本技能。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 记忆迭代技能

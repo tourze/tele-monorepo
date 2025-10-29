@@ -1,6 +1,7 @@
 ---
 name: method-risk-matrix
 description: 使用风险矩阵与 FMEA 识别、评估、缓解项目风险，覆盖登记、监控与回溯。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # 风险矩阵技能

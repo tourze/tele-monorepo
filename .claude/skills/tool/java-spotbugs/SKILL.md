@@ -1,21 +1,25 @@
 ---
 name: java-tool-spotbugs
 description: 使用 SpotBugs 识别 Java 安全与性能问题，覆盖配置、分类与修复策略。
+allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(*), TodoWrite
 ---
 
 # SpotBugs 技能
 
 ## 适用场景
+
 - 在构建过程中运行 SpotBugs 检测潜在缺陷。
 - 分析高优先级问题：空指针、安全、并发、性能。
 - 维护 `excludeFilter`，避免误报而不遗漏真实问题。
 
 ## 前置准备
+
 - 已启用 SpotBugs 插件（Gradle `com.github.spotbugs` 或 Maven）。
 - 准备 `spotbugs-exclude.xml` 管理例外。
 - 明确目标任务：`spotbugsMain`, `spotbugsTest`.
 
 ## 操作步骤
+
 1. **执行命令**
    - Gradle：`./gradlew spotbugsMain`.
    - Maven：`mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs`.
@@ -35,16 +39,19 @@ description: 使用 SpotBugs 识别 Java 安全与性能问题，覆盖配置、
    - 修复后重跑 SpotBugs + 测试，确保问题消除。
 
 ## 质量校验
+
 - SpotBugs 任务成功，无高优先级未解决缺陷。
 - 例外条目最少化，包含注释与负责人。
 - 修复后质量门（Checkstyle/Spotless/JUnit）通过。
 
 ## 失败与回滚
+
 - 插件运行失败：检查 JDK/ASM 版本兼容性，必要时降级。
 - 误报过多：与团队讨论调整 `reportLevel`，但保留高优先级。
 - 修复引发回归：回滚代码并重新分析缺陷。
 
 ## 交付物
+
 - SpotBugs 报告摘要（缺陷列表、状态）。
 - 例外过滤文件与说明。
 - 修复记录与验证命令。
