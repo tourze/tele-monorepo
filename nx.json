@@ -18,14 +18,26 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production", "sharedGlobals"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production",
+        "sharedGlobals"
+      ]
     },
     "serve": {
-      "dependsOn": ["build"]
+      "dependsOn": [
+        "build"
+      ]
     },
     "test": {
-      "inputs": ["default", "^production", "sharedGlobals"]
+      "inputs": [
+        "default",
+        "^production",
+        "sharedGlobals"
+      ]
     }
   }
 }
