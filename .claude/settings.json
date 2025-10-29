@@ -57,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/phpstan-require-path.php"
+            "command": "node ./.claude/hooks/phpstan-require-path.js"
           }
         ]
       }
