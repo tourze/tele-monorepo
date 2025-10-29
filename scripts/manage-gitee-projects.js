@@ -44,26 +44,60 @@ function cloneProject(project) {
   }
 }
 
-function cloneFromUrl(giteeUrl) {
-  // Extract project name from URL
-  const urlParts = giteeUrl.split('/');
-  const repoName = urlParts[urlParts.length - 1].replace('.git', '');
-  const targetDir = path.join(__dirname, '..', 'apps', repoName);
+function cloneFromUrl(name, giteeUrl) {
+  const targetDir = path.join(__dirname, '..', 'apps', name);
 
   if (fs.existsSync(targetDir)) {
-    console.log(`Project ${repoName} already exists in apps/${repoName}`);
+    console.log(`Project ${name} already exists in apps/${name}`);
     return;
   }
 
-  console.log(`Cloning ${repoName} from ${giteeUrl}...`);
+  console.log(`Cloning ${name} from ${giteeUrl}...`);
 
   try {
     execSync(`git clone ${giteeUrl} ${targetDir}`, { stdio: 'inherit' });
-    console.log(`Successfully cloned ${repoName} to apps/${repoName}`);
+
+    // Update project list
+    updateProjectList(name, giteeUrl);
+
+    // Update Nx cache
+    console.log('Updating Nx cache...');
+    try {
+      execSync('npx nx reset', { stdio: 'inherit' });
+    } catch (error) {
+      console.warn('Failed to reset Nx cache:', error.message);
+    }
+
+    console.log(`Successfully cloned ${name} to apps/${name}`);
+    console.log('\n📦 Please remember to update dependencies by running:');
+    console.log('   npm install');
+
   } catch (error) {
-    console.error(`Failed to clone ${repoName}:`, error.message);
+    console.error(`Failed to clone ${name}:`, error.message);
     process.exit(1);
   }
+}
+
+function updateProjectList(name, giteeUrl) {
+  const config = loadConfig();
+
+  // Check if project already exists in config
+  const existingIndex = config.projects.findIndex(p => p.name === name);
+  const projectInfo = {
+    name,
+    giteeUrl,
+    branch: 'master'
+  };
+
+  if (existingIndex >= 0) {
+    config.projects[existingIndex] = projectInfo;
+    console.log(`Updated existing entry for ${name} in project list`);
+  } else {
+    config.projects.push(projectInfo);
+    console.log(`Added ${name} to project list`);
+  }
+
+  saveConfig(config);
 }
 
 function pullProject(project) {
@@ -86,6 +120,25 @@ function pullProject(project) {
   }
 }
 
+function updateProject(name) {
+  const targetDir = path.join(__dirname, '..', 'apps', name);
+
+  if (!fs.existsSync(targetDir)) {
+    console.error(`Project ${name} not found in apps/${name}`);
+    process.exit(1);
+  }
+
+  console.log(`Updating ${name}...`);
+
+  try {
+    execSync(`cd ${targetDir} && git pull`, { stdio: 'inherit' });
+    console.log(`Successfully updated ${name}`);
+  } catch (error) {
+    console.error(`Failed to update ${name}:`, error.message);
+    process.exit(1);
+  }
+}
+
 
 function listProjects() {
   const config = loadConfig();
@@ -103,10 +156,31 @@ function main() {
   const [command, ...args] = process.argv.slice(2);
 
   switch (command) {
+    case 'clone-project':
+      if (args.length !== 2) {
+        console.error('Usage: clone-project <project-name> <repository-url>');
+        console.error('Example: clone-project micro-mall https://gitee.com/umworks/micro-mall');
+        process.exit(1);
+      }
+      const [projectName, repositoryUrl] = args;
+      cloneFromUrl(projectName, repositoryUrl);
+      break;
+
+    case 'update-project':
+      if (args.length !== 1) {
+        console.error('Usage: update-project <project-name>');
+        console.error('Example: update-project micro-mall');
+        process.exit(1);
+      }
+      updateProject(args[0]);
+      break;
+
     case 'clone':
       if (args.length > 0 && args[0].startsWith('http')) {
-        // Direct clone with URL
-        cloneFromUrl(args[0]);
+        // Direct clone with URL (legacy support)
+        const urlParts = args[0].split('/');
+        const repoName = urlParts[urlParts.length - 1].replace('.git', '');
+        cloneFromUrl(repoName, args[0]);
       } else {
         // Clone all configured projects
         const config = loadConfig();
@@ -133,13 +207,16 @@ function main() {
 Usage: node manage-gitee-projects.js <command> [args]
 
 Commands:
-  clone [url]   Clone project(s) - with URL clones directly, without URL clones all configured
-  pull          Pull updates for all configured projects
-  sync          Sync all configured projects (same as pull)
-  list          List all configured projects and their status
+  clone-project <name> <url>    Clone a new project and add to project list
+  update-project <name>        Pull latest changes for an existing project
+  clone [url]                  Clone project(s) - with URL clones directly (legacy)
+  pull                         Pull updates for all configured projects
+  sync                         Sync all configured projects (same as pull)
+  list                         List all configured projects and their status
 
 Examples:
-  node manage-gitee-projects.js clone
+  node manage-gitee-projects.js clone-project micro-mall https://gitee.com/umworks/micro-mall
+  node manage-gitee-projects.js update-project micro-mall
   node manage-gitee-projects.js clone https://gitee.com/user/project.git
   node manage-gitee-projects.js pull
   node manage-gitee-projects.js list

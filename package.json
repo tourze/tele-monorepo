@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "clone-project": "node scripts/manage-gitee-projects.js clone-project",
+    "update-project": "node scripts/manage-gitee-projects.js update-project",
     "gitee:clone": "node scripts/manage-gitee-projects.js clone",
     "seven-fish:start": "cd apps/seven-fish-customer-service && npm start",
     "seven-fish:build": "cd apps/seven-fish-customer-service && npm run build",

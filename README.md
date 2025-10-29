@@ -5,6 +5,12 @@
 ## 克隆项目
 
 ```bash
+# 克隆新项目并添加到项目列表
+npm run clone-project micro-mall https://gitee.com/umworks/micro-mall
+
+# 更新现有项目
+npm run update-project micro-mall
+
 # 克隆所有配置的项目
 npm run gitee:clone
 
