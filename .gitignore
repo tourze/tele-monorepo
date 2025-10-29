@@ -66,3 +66,6 @@ openspec/changes/
 !openspec/archive/
 !openspec/AGENTS.md
 !openspec/project.md
+
+package-lock.json
+yarn.lock
