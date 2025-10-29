@@ -12,15 +12,14 @@ from typing import Dict, List, Tuple
 ROOT = Path(__file__).resolve().parent / "skills"
 
 
-def parse_skill(path: Path) -> Tuple[str, str, str]:
-    """解析 SKILL.md，返回 (类别, 名称, 描述)。"""
+def parse_skill(path: Path) -> Tuple[str, Dict[str, str]]:
+    """解析 SKILL.md，返回 (类别, frontmatter)。"""
     rel_parts = path.relative_to(ROOT).parts
     category = rel_parts[0] if rel_parts else "unknown"
-    name = ""
-    description = ""
+    metadata: Dict[str, str] = {}
     lines = path.read_text(encoding="utf-8").splitlines()
     if not lines or lines[0].strip() != "---":
-        return category, name, description
+        return category, metadata
     idx = 1
     while idx < len(lines):
         line = lines[idx]
@@ -31,29 +30,26 @@ def parse_skill(path: Path) -> Tuple[str, str, str]:
             key, value = line.split(":", 1)
             key = key.strip()
             value = value.strip()
-            if key == "name":
-                name = value
-            elif key == "description":
-                description = value
+            metadata[key] = value
         idx += 1
-    return category, name, description
+    return category, metadata
 
 
-def collect_skills() -> Dict[str, List[Tuple[str, str, str]]]:
-    """按类别收集所有技能，列表元素包含 (相对路径, name, description)。"""
+def collect_skills() -> Dict[str, List[Tuple[str, Dict[str, str]]]]:
+    """按类别收集所有技能，列表元素包含 (相对路径, frontmatter)。"""
     if not ROOT.exists():
         print("未找到技能目录：", ROOT, file=sys.stderr)
         sys.exit(1)
-    groups: Dict[str, List[Tuple[str, str, str]]] = {}
+    groups: Dict[str, List[Tuple[str, Dict[str, str]]]] = {}
     for skill_file in sorted(ROOT.rglob("SKILL.md")):
-        category, name, description = parse_skill(skill_file)
+        category, metadata = parse_skill(skill_file)
         rel_path = skill_file.relative_to(Path(__file__).resolve().parent)
-        entry = (str(rel_path), name, description)
+        entry = (str(rel_path), metadata)
         groups.setdefault(category, []).append(entry)
     return groups
 
 
-def emit_markdown(groups: Dict[str, List[Tuple[str, str, str]]]) -> None:
+def emit_markdown(groups: Dict[str, List[Tuple[str, Dict[str, str]]]]) -> None:
     """输出 Markdown 文本。"""
     print("# Skill Preview\n")
     print("> 由 `.claude/skill_preview.py` 自动生成。按类别列出所有技能及其描述。\n")
@@ -62,12 +58,14 @@ def emit_markdown(groups: Dict[str, List[Tuple[str, str, str]]]) -> None:
         if not skills:
             continue
         print(f"## {category}\n")
-        print("| 技能路径 | name | description |")
-        print("| --- | --- | --- |")
-        for rel_path, name, description in skills:
-            nice_name = name or Path(rel_path).parent.name
-            desc = description or ""
-            print(f"| `{rel_path}` | {nice_name} | {desc} |")
+        print("| 技能路径 | name | description | allowed-tools |")
+        print("| --- | --- | --- | --- |")
+        for rel_path, metadata in skills:
+            nice_name = metadata.get("name") or Path(rel_path).parent.name
+            desc = metadata.get("description", "")
+            allowed = metadata.get("allowed-tools", "")
+            allowed_display = allowed if allowed else "-"
+            print(f"| `{rel_path}` | {nice_name} | {desc} | {allowed_display} |")
         print()
 
 

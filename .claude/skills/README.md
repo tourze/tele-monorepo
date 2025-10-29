@@ -10,7 +10,16 @@
 所有 Skill 采用 `SKILL.md`，遵循 `.claude/docs/skill.md` 中的 YAML 前言 + Markdown 正文格式，明确触发条件、步骤、验证与回滚。各代理之间通过“完成定义”对齐，避免内容重复或冲突。
 
 新增 Skill 步骤：
+
 1. 选择对应层级目录，新建 `<skill-name>/SKILL.md`。
 2. 在 YAML `name`、`description` 中写明能力与触发场景。
 3. 在正文中补充前置依赖、操作步骤、校验方法与失败恢复策略。
 4. 通过代码评审，确保与 `CLAUDE.md` 红线一致。
+
+## 维护流程（遵循 docs/claude/skills.md 指南）
+
+1. **设计阶段**：撰写 `SKILL.md` 时明确“做什么 + 何时触发”，并在正文补充触发示例或常见问法。
+2. **语境对齐**：校对 `description` 与 `CLAUDE.md` 速查表触发条件一致，避免漏触或误触。
+3. **结构自检**：执行 `python3 .claude/skill_audit.py`，验证 frontmatter 必填项、章节结构与 `allowed-tools` 配置。
+4. **目录回归**：运行 `python3 .claude/skill_preview.py > SKILL_PREVIEW.md`，人工复核分类、描述、工具限制。
+5. **团队同步**：在提交或变更说明中附上脚本输出要点，便于复核与知识沉淀。
