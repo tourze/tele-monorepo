@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Glob(*), Bash(*), TodoW
 argument-hint: [CRD.md] [--strict] [--dry-run] [--output <file>]
 ---
 
+# 前端实施
+
 ## 参数
 
 - **必填**：`CRD.md`（组件/特性设计文档）。
@@ -15,7 +17,8 @@ argument-hint: [CRD.md] [--strict] [--dry-run] [--output <file>]
 - `scenario-feature-execution` ：提供通用的特性实施状态机和流程。
 - `scenario-frontend-execute` ：补充前端特有的实现步骤和质量门。
 - `scenario-quality-gates` : 定义前端质量门的执行顺序。
-- 语言与工具技能: `js-frontend-react`、`js-react-hooks`、`js-react-state-management`、`js-frontend-presentation`、`js-tool-prettier`、`js-tool-eslint`、`ts-tool-tsc`、`js-tool-vitest`、`js-tool-vite-bundler`。
+- 语言与工具技能：`js-frontend-react`、`js-react-hooks`、`js-react-state-management`、`js-frontend-presentation`、
+  `js-tool-prettier`、`js-tool-eslint`、`ts-tool-tsc`、`js-tool-vitest`、`js-tool-vite-bundler`。
 
 ## 流程概览
 

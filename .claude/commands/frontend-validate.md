@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
 argument-hint: [CRD.md] [--fix-only] [--output <file>] [--strict]
 ---
 
+# 前端验收
+
 ## 参数
 
 - **必填**：`CRD.md`（需验证的组件/特性设计）。
@@ -21,7 +23,8 @@ argument-hint: [CRD.md] [--fix-only] [--output <file>] [--strict]
 
 1. **对齐标准**：解析 CRD 的质量验收标准、任务分解、监控需求，构建核对清单。
 2. **执行质量门**：通过 `scenario-quality-gates` 对目标路径运行格式、Lint、类型、测试、构建命令；记录命令与结果。
-3. **差距分析**：比较质量门结果与验收标准，使用 `scenario-feature-validation` 生成 R 编号任务，并以 `method-risk-matrix` 评估风险。
+3. **差距分析**：比较质量门结果与验收标准，使用 `scenario-feature-validation` 生成 R 编号任务，并以
+   `method-risk-matrix` 评估风险。
 4. **输出报告**：更新 CRD 验证区块或写入 `--output` 文件；`--fix-only` 时仅输出任务清单与责任人。
 
 ## 产出

@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Glob(*), TodoWrite
 argument-hint: [FRD.md|name keywords] [--output <file>] [--strict]
 ---
 
+# 特性设计
+
 ## 参数
 
 - **必填**：`FRD.md` 路径或关键词（唯一定位/新建 FRD）
@@ -21,15 +23,19 @@ argument-hint: [FRD.md|name keywords] [--output <file>] [--strict]
 
 ## 流程概览
 
-- **商业价值对齐**：先调用 `method-business-impact-engineering`，输出迷你 PR/FAQ、Value Brief、指标链路、RICE/WSJF 评分、MVP/灰度计划。
-- **阶段推进**：按照 `scenario-feature-design` 的模板补齐目标、范围、架构决策、任务分解、质量指标，并确保与 Value Brief 一致。
+- **商业价值对齐**：先调用 `method-business-impact-engineering`，输出迷你 PR/FAQ、Value Brief、指标链路、
+  RICE/WSJF 评分、MVP/灰度计划。
+- **阶段推进**：按照 `scenario-feature-design` 的模板补齐目标、范围、架构决策、任务分解、质量指标，并确保与
+  Value Brief 一致。
 - **可视化**：借助 `scenario-prd-visual-optimizer` 生成流程图、架构图、权限矩阵等，并校验渲染兼容。
-- **资源与计划**：当涉及成本/排期时，使用 `scenario-pm-tech-manager-assistant` 与 `scenario-ratecard-quote` 的方法论输出甘特图和报价表。
+- **资源与计划**：当涉及成本/排期时，使用 `scenario-pm-tech-manager-assistant` 与
+  `scenario-ratecard-quote` 的方法论输出甘特图和报价表。
 - **协作沟通**：通过 `method-stakeholder-communication` 与干系人确认需求、记录审批节点。
 
 ## 产出
 
-- 六块结构化输出：Value Brief、Plan、Metrics、Ops、Code/Config、Risks。
+- 六块结构化输出：Value Brief、Plan、Metrics、Ops、
+  Code/Config、Risks。
 - 结构完整、可执行的 FRD（含双轨呈现、权限矩阵、风险与验收）。
 - 进度摘要或审批记录，必要时写入 `--output` 指定文件。
 - 后续建议：进入实施前的准备事项与质量预检结论。

@@ -4,6 +4,8 @@ allowed-tools: Read(*), Glob(*), Bash(*), WebSearch
 argument-hint: (无) - 行为模式指令
 ---
 
+# 主动讨论
+
 ## 触发场景
 
 - 需求模糊、上下文不足或存在多种实现路径。

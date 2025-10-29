@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*), Grep(*)
 argument-hint: [CRD.md|path] [--scope <glob>] [--output <file>] [--strict]
 ---
 
+# 前端重构
+
 ## 参数
 
 - 位置参数：`[CRD.md|path]`（以 CRD 为准；否则以目录路由规则）
@@ -20,7 +22,8 @@ argument-hint: [CRD.md|path] [--scope <glob>] [--output <file>] [--strict]
 
 ## 流程概览
 
-1. **范围扫描**：读取 CRD 或目录，结合 `scenario-frontend-execute` 的检测清单识别重构机会（职责、状态、性能、a11y）。
+1. **范围扫描**：读取 CRD 或目录，结合 `scenario-frontend-execute` 的检测清单识别重构机会（职责、状态、
+   性能、a11y）。
 2. **任务分组**：运用 `method-data-structure-first` 将重构项按数据结构或组件职责分组，评估风险与收益。
 3. **计划输出**：按照优先级生成重构计划，明确所需语言/工具技能以及质量门。
 4. **实施（可选）**：在同一命令中可逐项执行，并在每次改动后运行 `scenario-quality-gates` 定向验证。

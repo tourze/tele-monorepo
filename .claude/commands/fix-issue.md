@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
 argument-hint: <issue-id|url> [--path <dir>] [--strict] [--dry-run] [--output <file>]
 ---
 
+# Issue 修复
+
 ## 参数
 
 - 必填：`<issue-id|url>`（GitHub/平台 Issue 标识）

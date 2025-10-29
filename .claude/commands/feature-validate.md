@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
 argument-hint: [FRD.md] [--fix-only] [--output <file>] [--strict]
 ---
 
+# 特性验收
+
 ## 参数
 
 - **必填**：`FRD.md`（需验证的特性文档）。
@@ -22,12 +24,14 @@ argument-hint: [FRD.md] [--fix-only] [--output <file>] [--strict]
 
 1. **读取标准**：解析 FRD 的验收/非功能章节与 Value Brief 中的 NSM、输入指标、护栏、单位经济目标，建立核对清单。
 2. **执行质量门**：按 `scenario-quality-gates` 的顺序运行质量门，并限制在 FRD 涉及的路径，同时采集实验/灰度数据。
-3. **差距分析**：对比结果与 FRD 指标、Value Brief 假设，使用 `method-risk-matrix` 评估风险等级，生成 R 编号任务。
-4. **输出报告**：更新 FRD 的验证章节或写入 `--output` 文件；若 `--fix-only`，仅列出修复清单，并同步 Value Brief 状态。
+3. **差距分析**：对比结果与 FRD 指标、Value Brief 假设，使用 `method-risk-matrix` 评估风险等级，并生成 R 编号任务。
+4. **输出报告**：更新 FRD 的验证章节或写入 `--output` 文件；若 `--fix-only`，仅列出修复清单，并同步
+   Value Brief 状态。
 
 ## 产出
 
-- 六块结构化输出：Value Brief 验证结论、Plan 执行状态、Metrics 达成情况、Ops 风险、Code/Config 调整、Risks/下一步。
+- 六块结构化输出：Value Brief 验证结论、Plan 执行状态、
+  Metrics 达成情况、Ops 风险、Code/Config 调整、Risks/下一步。
 - 验证摘要：通过项/未通过项及风险评估。
 - 修复任务列表（R01/R02/...），标注 Owner、截止时间、关联技能。
 - 如需交接，附上质量门命令与结果引用，便于复现。

@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
 argument-hint: [ProcedureName] [--base=<Base|Cacheable|Lockable>] [--output <file>] [--strict]
 ---
 
+# PHP JsonRPC Procedure
+
 ## 参数
 
 - 位置参数：`[ProcedureName]`（PascalCase，动词+名词，放置至 `src/Procedure/...`）

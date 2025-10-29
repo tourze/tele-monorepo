@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
 argument-hint: [path] [--output <file>] [--strict]
 ---
 
+# README 生成
+
 ## 参数
 
 - 位置参数：`[path]`（包/项目根目录，缺省为当前目录）

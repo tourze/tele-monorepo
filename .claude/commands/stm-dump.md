@@ -4,6 +4,8 @@ allowed-tools: Read(*), Glob(*)
 argument-hint: '[command_name]'
 ---
 
+# 状态机转储
+
 ## 参数
 
 - `command_name` 可省略，默认分析最近的状态机命令。

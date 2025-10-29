@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Glob(*)
 argument-hint: [path/to/design-doc.md] [--output <file>] [--strict]
 ---
 
+# 设计评审
+
 ## 参数
 
 - **必填**：设计文档路径（FRD/CRD/DESIGN.md 等）。

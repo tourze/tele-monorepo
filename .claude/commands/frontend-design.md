@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Glob(*), TodoWrite
 argument-hint: [CRD.md|name keywords] [--output <file>] [--strict]
 ---
 
+# 前端设计
+
 ## 参数
 
 - **必填**：`CRD.md` 路径或关键词（定位/新建 CRD）。
@@ -20,14 +22,18 @@ argument-hint: [CRD.md|name keywords] [--output <file>] [--strict]
 
 ## 流程概览
 
-1. **定位与建模**：按照 `scenario-frontend-design` 的设计阶段要求，创建/定位 CRD，并确认组件的角色、数据流、交互范围。
-2. **填充模板**：使用 `scenario-prd-visual-optimizer` 保证 CRD 中的流程图、组件树、表格双轨一致；状态管理、数据契约部分引用语言技能。
+1. **定位与建模**：按照 `scenario-frontend-design` 的设计阶段要求，创建/定位 CRD，并确认组件的角色、数据流、
+   交互范围。
+2. **填充模板**：使用 `scenario-prd-visual-optimizer` 保证 CRD 中的流程图、组件树、表格双轨一致；状态管理、数据契约
+   部分引用语言技能。
 3. **校验与审批**：每个阶段完成后生成进度摘要，直接记录审批要点；确保 a11y、性能、状态最小化约束得到记录。
-4. **输出整理**：在 `--output` 指定时汇总阶段结论，提示后续 `/frontend-execute` 与 `/frontend-validate` 所需准备。
+4. **输出整理**：在 `--output` 指定时汇总阶段结论，提示后续 `/frontend-execute` 与
+   `/frontend-validate` 所需准备。
 
 ## 产出
 
-- 完整的 CRD：用户价值、数据/状态契约、交互流程、可访问性、性能要求、任务分解、验收标准。
+- 完整的 CRD：用户价值、数据/状态契约、交互流程、可访问性、性能要求、
+  任务分解、验收标准。
 - 可视化资源：Mermaid 组件树/流程图、表格与图一致性校验结果。
 - 阶段审批记录及后续推荐动作。
 

@@ -4,6 +4,8 @@ allowed-tools: Read(*), Write(*), Edit(*), Bash(*), Glob(*)
 argument-hint: [EntityOrDir] [--menu] [--no-service] [--output <file>] [--strict]
 ---
 
+# PHP EasyAdmin CRUD
+
 ## 参数
 
 - 位置参数：`[EntityOrDir]`（单实体或包含实体的目录/Bundle/Project）
@@ -21,7 +23,8 @@ argument-hint: [EntityOrDir] [--menu] [--no-service] [--output <file>] [--strict
 ## 流程概览
 
 1. **范围识别**：列出实体、仓储、目标菜单组；确认角色与权限要求。
-2. **骨架生成**：依据 `scenario-php-easyadmin-crud` 创建或补全 CrudController、表单配置、字段与筛选器；`--menu` 时同步更新菜单服务。
+2. **骨架生成**：依据 `scenario-php-easyadmin-crud` 创建或补全 CrudController、表单配置、字段与筛选器；
+   `--menu` 时同步更新菜单服务。
 3. **业务分层**：结合 `php-symfony-service-layer` 将业务逻辑放在 Service，控制器仅负责交互。
 4. **质量门**：运行 PHP-CS-Fixer、PHPStan、PHPUnit/Paratest；必要时更新翻译与配置，记录命令。
 5. **报告与交付**：生成变更清单、菜单/权限说明，必要时写入 `--output` 文件。
