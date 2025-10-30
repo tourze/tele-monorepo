@@ -6,6 +6,8 @@
     "clone-project": "node scripts/manage-git-projects.js clone-project",
     "update-project": "node scripts/manage-git-projects.js update-project",
     "sync-project": "node scripts/manage-git-projects.js sync-project",
+    "git:push-all": "node scripts/git-sync-all.js push",
+    "git:pull-all": "node scripts/git-sync-all.js pull",
     "openspec:validate": "node scripts/openspec-validate.js",
     "openspec:init": "echo 'OpenSpec 已初始化。运行 yarn openspec:validate 可执行验证。'",
     "reinstall": "rimraf node_modules yarn.lock package-lock.json apps/*/node_modules packages/*/node_modules && yarn install",
