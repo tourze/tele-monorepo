@@ -31,6 +31,15 @@ VibeShell 是一个使用 Yarn Workspaces 管理的多项目仓库，当前聚�
 
 ⚠️ 仓库内所有依赖操作请使用 `yarn`，避免混用 `npm` 或 `pnpm`。
 
+## Yarn Workspaces 常见命令
+
+- `yarn workspaces info`：查看工作区拓扑结构与依赖信息（参考 Yarn Classic 官方文档）
+- `yarn workspaces run <脚本>`：一次性在所有工作区执行同名脚本，例如 `yarn workspaces run lint`
+- `yarn workspace <包名> run <脚本>`：在指定工作区内执行脚本，例如 `yarn workspace tkp-pp-wmp run build`
+- `yarn workspace <包名> add <依赖>`：向某个工作区安装依赖，并自动在根目录提升共享
+
+> 如果未来升级到 Yarn Berry（v2+），可结合 `yarn workspaces list`、`yarn workspaces foreach` 等新指令；当前仓库基于 Yarn 1.x。
+
 ## 目录结构
 
 ```
