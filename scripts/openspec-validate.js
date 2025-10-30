@@ -116,56 +116,64 @@ function validateProjectConfigs() {
   return isValid;
 }
 
-// 检查 Nx 配置
-function validateNxConfig() {
-  info('验证 Nx 配置...');
+// 检查工作区配置
+function validateWorkspaceConfig() {
+  info('验证 Yarn 工作区配置...');
 
-  const nxConfigPath = path.join(PROJECT_ROOT, 'nx.json');
-  if (!fs.existsSync(nxConfigPath)) {
-    error('nx.json 不存在');
+  const packageJsonPath = path.join(PROJECT_ROOT, 'package.json');
+  if (!fs.existsSync(packageJsonPath)) {
+    error('package.json 不存在');
     return false;
   }
 
   try {
-    const nxConfig = JSON.parse(fs.readFileSync(nxConfigPath, 'utf8'));
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    const rawWorkspaces = packageJson.workspaces;
+    let patterns = [];
 
-    // 检查 sharedGlobals 配置
-    if (nxConfig.namedInputs && nxConfig.namedInputs.sharedGlobals) {
-      success('sharedGlobals 配置存在');
+    if (Array.isArray(rawWorkspaces)) {
+      patterns = rawWorkspaces;
+    } else if (rawWorkspaces && Array.isArray(rawWorkspaces.packages)) {
+      patterns = rawWorkspaces.packages;
+    }
 
-      const sharedGlobals = nxConfig.namedInputs.sharedGlobals;
-      const hasOpenSpecFiles = sharedGlobals.some(pattern =>
-        pattern.includes('openspec')
-      );
+    if (!patterns.length) {
+      error('未检测到 workspaces 配置');
+      return false;
+    }
 
-      if (hasOpenSpecFiles) {
-        success('sharedGlobals 包含 OpenSpec 文件');
+    success(`检测到 ${patterns.length} 个工作区模式`);
+
+    const requiredPatterns = ['apps/*', 'packages/*'];
+    let allRequiredPresent = true;
+
+    for (const required of requiredPatterns) {
+      if (patterns.includes(required)) {
+        success(`包含工作区模式：${required}`);
       } else {
-        warning('sharedGlobals 未包含 OpenSpec 文件');
+        warning(`缺少工作区模式：${required}`);
+        allRequiredPresent = false;
       }
-    } else {
-      warning('sharedGlobals 配置不存在');
     }
 
-    // 检查 targetDefaults
-    if (nxConfig.targetDefaults) {
-      success('targetDefaults 配置存在');
+    const workspaceDirs = patterns
+      .filter(pattern => pattern.endsWith('/*'))
+      .map(pattern => pattern.replace('/*', ''));
 
-      if (nxConfig.targetDefaults.build) {
-        const buildConfig = nxConfig.targetDefaults.build;
-        if (buildConfig.inputs && buildConfig.inputs.includes('sharedGlobals')) {
-          success('构建任务包含 sharedGlobals 输入');
-        } else {
-          warning('构建任务未包含 sharedGlobals 输入');
-        }
+    let dirsValid = true;
+    for (const dir of workspaceDirs) {
+      const workspaceDirPath = path.join(PROJECT_ROOT, dir);
+      if (fs.existsSync(workspaceDirPath) && fs.statSync(workspaceDirPath).isDirectory()) {
+        success(`${dir}/ 目录存在`);
+      } else {
+        warning(`${dir}/ 目录不存在`);
+        dirsValid = false;
       }
-    } else {
-      warning('targetDefaults 配置不存在');
     }
 
-    return true;
+    return allRequiredPresent && dirsValid;
   } catch (err) {
-    error(`nx.json 解析失败: ${err.message}`);
+    error(`package.json 解析失败: ${err.message}`);
     return false;
   }
 }
@@ -210,7 +218,7 @@ function main() {
   results.push(validateProjectConfigs());
   console.log('');
 
-  results.push(validateNxConfig());
+  results.push(validateWorkspaceConfig());
   console.log('');
 
   results.push(runOpenSpecValidation());
@@ -239,6 +247,6 @@ if (require.main === module) {
 module.exports = {
   validateOpenSpecStructure,
   validateProjectConfigs,
-  validateNxConfig,
+  validateWorkspaceConfig,
   runOpenSpecValidation
 };

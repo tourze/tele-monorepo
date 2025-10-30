@@ -67,17 +67,8 @@ function cloneFromUrl(name, giteeUrl) {
     // Update project list
     updateProjectList(name, giteeUrl);
 
-    // Update Nx cache
-    console.log('Updating Nx cache...');
-    try {
-      execSync('npx nx reset', { stdio: 'inherit' });
-    } catch (error) {
-      console.warn('Failed to reset Nx cache:', error.message);
-    }
-
     console.log(`Successfully cloned ${name} to apps/${name}`);
-    console.log('\n📦 Please remember to update dependencies by running:');
-    console.log('   npm install');
+    console.log('\n📦 请在仓库根目录执行 yarn install 更新依赖');
 
   } catch (error) {
     console.error(`Failed to clone ${name}:`, error.message);
