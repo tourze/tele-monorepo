@@ -16,6 +16,7 @@
     "@nx/js": "22.0.1",
     "@nx/react": "^22.0.2",
     "@nx/react-native": "^22.0.2",
+    "@nx/storybook": "^22.0.2",
     "@nx/web": "22.0.2",
     "@nx/webpack": "^22.0.2",
     "@nx/workspace": "22.0.1",
@@ -24,6 +25,7 @@
     "metro-config": "~0.82.4",
     "metro-resolver": "~0.82.4",
     "nx": "22.0.2",
+    "storybook": "9.1.16",
     "webpack-cli": "^5.1.4"
   },
   "nx": {},
