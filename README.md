@@ -161,7 +161,7 @@ git log --oneline  # 查看提交历史
 - ⚠️ 需要安装 Git 命令行工具
 
 ---
-**项目配置在 `gitee-projects.json` 中**
+**项目配置在 `local-projects.json` 中**
 
 
 ## AGENTS使用例子

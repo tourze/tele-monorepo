@@ -76,3 +76,5 @@ yarn.lock
 .github/instructions/nx.instructions.md
 
 storybook-static
+
+local-projects.json

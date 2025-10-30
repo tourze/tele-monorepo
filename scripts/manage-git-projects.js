@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const CONFIG_FILE = path.join(__dirname, '..', 'gitee-projects.json');
+const CONFIG_FILE = path.join(__dirname, '..', 'local-projects.json');
 const DEFAULT_CONFIG = {
   // 默认配置包含空项目列表以及基础目录信息
   projects: [],
