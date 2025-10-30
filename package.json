@@ -16,12 +16,15 @@
     "@nx/js": "22.0.1",
     "@nx/react": "^22.0.2",
     "@nx/react-native": "^22.0.2",
+    "@nx/web": "22.0.2",
+    "@nx/webpack": "^22.0.2",
     "@nx/workspace": "22.0.1",
     "eslint": "~8.57.0",
     "markdownlint-cli": "^0.45.0",
     "metro-config": "~0.82.4",
     "metro-resolver": "~0.82.4",
-    "nx": "22.0.2"
+    "nx": "22.0.2",
+    "webpack-cli": "^5.1.4"
   },
   "nx": {},
   "workspaces": [
