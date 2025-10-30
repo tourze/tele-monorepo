@@ -78,3 +78,6 @@ yarn.lock
 storybook-static
 
 local-projects.json
+
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
