@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "clone-project": "node scripts/manage-gitee-projects.js clone-project",
-    "update-project": "node scripts/manage-gitee-projects.js update-project",
-    "gitee:clone": "node scripts/manage-gitee-projects.js clone",
+    "clone-project": "node scripts/manage-git-projects.js clone-project",
+    "update-project": "node scripts/manage-git-projects.js update-project",
+    "sync-project": "node scripts/manage-git-projects.js sync-project",
     "openspec:validate": "node scripts/openspec-validate.js",
-    "openspec:init": "echo 'OpenSpec already initialized. Run npm run openspec:validate to check configuration.'"
+    "openspec:init": "echo 'OpenSpec already initialized. Run npm run openspec:validate to check configuration.'",
+    "reinstall": "rimraf node_modules yarn.lock package-lock.json packages/*/node_modules && npm install"
   },
   "private": true,
   "devDependencies": {
@@ -25,6 +26,7 @@
     "metro-config": "~0.82.4",
     "metro-resolver": "~0.82.4",
     "nx": "22.0.2",
+    "rimraf": "^6.0.1",
     "storybook": "9.1.16",
     "webpack-cli": "^5.1.4"
   },

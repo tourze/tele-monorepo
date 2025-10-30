@@ -175,7 +175,7 @@ function main() {
       updateProject(args[0]);
       break;
 
-    case 'clone':
+    case 'sync-project':
       if (args.length > 0 && args[0].startsWith('http')) {
         // Direct clone with URL (legacy support)
         const urlParts = args[0].split('/');
