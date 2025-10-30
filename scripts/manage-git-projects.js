@@ -5,11 +5,18 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const CONFIG_FILE = path.join(__dirname, '..', 'gitee-projects.json');
+const DEFAULT_CONFIG = {
+  // 默认配置包含空项目列表以及基础目录信息
+  projects: [],
+  defaultAppsDir: 'apps',
+  defaultBranch: 'master'
+};
 
 function loadConfig() {
   if (!fs.existsSync(CONFIG_FILE)) {
-    console.error('Configuration file not found:', CONFIG_FILE);
-    process.exit(1);
+    console.warn(`未找到配置文件，自动创建默认配置：${CONFIG_FILE}`);
+    saveConfig(DEFAULT_CONFIG);
+    return DEFAULT_CONFIG;
   }
   return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
 }
