@@ -11,11 +11,15 @@
   },
   "private": true,
   "devDependencies": {
+    "@nx/docker": "^22.0.2",
     "@nx/js": "22.0.1",
     "@nx/workspace": "22.0.1",
     "markdownlint-cli": "^0.45.0",
     "nx": "22.0.2"
   },
   "nx": {},
-  "workspaces": ["apps/*", "packages/*"]
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
