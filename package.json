@@ -16,5 +16,6 @@
     "markdownlint-cli": "^0.45.0",
     "nx": "22.0.2"
   },
-  "nx": {}
+  "nx": {},
+  "workspaces": ["apps/*", "packages/*"]
 }
