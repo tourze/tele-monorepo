@@ -34,8 +34,28 @@
     "tslib": "^2.3.0",
     "typescript": "~5.9.2"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "**/@react-native",
+      "**/@react-native/**",
+      "**/@react-native-*",
+      "**/@react-native-*/**",
+      "**/@*/*react-native*",
+      "**/@*/*react-native*/**",
+      "**/@react-navigation",
+      "**/@react-navigation/**",
+      "**/react-native-*",
+      "**/react-native-*/**",
+      "**/hermes-engine",
+      "**/hermes-engine/**",
+      "**/detox",
+      "**/detox/**"
+    ]
+  }
 }
