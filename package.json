@@ -55,7 +55,9 @@
       "**/hermes-engine",
       "**/hermes-engine/**",
       "**/detox",
-      "**/detox/**"
+      "**/detox/**",
+      "**/newrelic-react-native-agent",
+      "**/newrelic-react-native-agent/**"
     ]
   }
 }
