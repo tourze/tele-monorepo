@@ -15,6 +15,7 @@
   },
   "private": true,
   "devDependencies": {
+    "autoprefixer": "^9.8.8",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -57,7 +58,21 @@
       "**/detox",
       "**/detox/**",
       "**/newrelic-react-native-agent",
-      "**/newrelic-react-native-agent/**"
+      "**/newrelic-react-native-agent/**",
+      "**/@antv",
+      "**/@antv/**",
+      "**/ant-design-*",
+      "**/ant-design-*/**",
+      "**/@vue",
+      "**/@vue/**",
+      "**/@vue-*",
+      "**/@vue-*/**",
+      "**/vue",
+      "**/vue/**",
+      "**/@tauri-apps",
+      "**/@tauri-apps/**",
+      "**/@tarojs",
+      "**/@tarojs/**"
     ]
   }
 }
