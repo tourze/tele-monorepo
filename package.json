@@ -15,7 +15,6 @@
   },
   "private": true,
   "devDependencies": {
-    "autoprefixer": "^9.8.8",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -23,6 +22,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.2.0",
     "@vitest/ui": "^3.0.0",
+    "autoprefixer": "^9.8.8",
     "eslint": "~8.57.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -72,7 +72,9 @@
       "**/@tauri-apps",
       "**/@tauri-apps/**",
       "**/@tarojs",
-      "**/@tarojs/**"
+      "**/@tarojs/**",
+      "**/globals",
+      "**/globals/**"
     ]
   }
 }
