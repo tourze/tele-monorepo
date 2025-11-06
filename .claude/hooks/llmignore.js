@@ -293,7 +293,8 @@ function normalizeForMatching(filePath, llmignoreDir) {
   let normalizedPath = filePath.replace(/\\/g, '/');
   let normalizedDir = llmignoreDir.replace(/\\/g, '/');
 
-  if (normalizedPath.startsWith('/')) {
+  // 处理 Windows 驱动器路径 (如 D:/path) 和 Unix 绝对路径 (如 /path)
+  if (normalizedPath.startsWith('/') || /^[A-Za-z]:\//.test(normalizedPath)) {
     if (normalizedDir && normalizedPath.startsWith(`${normalizedDir}/`)) {
       normalizedPath = normalizedPath.slice(normalizedDir.length + 1);
     } else if (normalizedPath === normalizedDir) {
