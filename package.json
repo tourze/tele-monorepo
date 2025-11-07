@@ -57,6 +57,8 @@
       "**/hermes-engine/**",
       "**/detox",
       "**/detox/**",
+      "**/ahooks",
+      "**/ahooks/**",
       "**/newrelic-react-native-agent",
       "**/newrelic-react-native-agent/**",
       "**/@antv",
