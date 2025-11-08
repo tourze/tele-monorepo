@@ -46,6 +46,7 @@ lastUpdated: 2026-01-10
   - `php-tool-phpstan`
   - `php-tool-phpunit`
   - `js-tool-eslint`
+  - 执行 ESLint 时，优先调用仓库根目录的 `eslint-run.js`：`./eslint-run.js apps/<pkg>/src/<file-or-dir>`，脚本会自动映射到目标包并运行 `yarn --cwd <pkg> eslint ...`，避免在错误的 workspace 下执行。
 
 请一定根据实际业务需要，主动加载 SKILL。
 

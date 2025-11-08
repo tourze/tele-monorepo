@@ -21,6 +21,7 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 ## 操作步骤
 
 1. **命令执行**
+   - monorepo 中若目标位于 `apps/*`，使用根目录脚本 `./eslint-run.js apps/<pkg>/src/<file-or-dir>`；脚本会转换为 `yarn --cwd apps/<pkg> eslint <target>` 并继承 stdout/stderr，可一次传入多个路径。
    - `npx eslint packages/ui --ext .ts,.tsx --max-warnings=0`.
    - 对 monorepo 使用 `pnpm eslint --filter <pkg>` 或 `nx lint <proj>`。
 2. **配置管理**
