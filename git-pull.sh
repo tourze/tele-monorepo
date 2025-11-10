@@ -37,6 +37,10 @@ for repo in "${repos[@]}"; do
   echo "==> 拉取仓库：$repo"
   (
     cd "$repo"
-    git pull "${CMD_ARGS[@]}"
+    if [ "${#CMD_ARGS[@]}" -eq 0 ]; then
+      git pull
+    else
+      git pull "${CMD_ARGS[@]}"
+    fi
   )
 done

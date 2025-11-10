@@ -37,6 +37,10 @@ for repo in "${repos[@]}"; do
   echo "==> 推送仓库：$repo"
   (
     cd "$repo"
-    git push "${CMD_ARGS[@]}"
+    if [ "${#CMD_ARGS[@]}" -eq 0 ]; then
+      git push
+    else
+      git push "${CMD_ARGS[@]}"
+    fi
   )
 done
