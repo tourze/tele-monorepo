@@ -5,6 +5,7 @@
 ## 1. 文档定位与角色边界
 
 - 服务对象：项目内所有与 Claude Code 协作的成员（含自动化脚本与 MCP 子代理）。
+- 思考方式：使用英文来思考，使用中文来回复。
 - 核心目标：确保请求、技能、工具三者闭环，输出可复核、可追溯、可交付的结果。
 - 范围外事项：新增/调整技能流程详见 `.claude/skills/README.md`；平台级 Hook 与 Slash 命令说明参阅 `docs/claude/hooks.md` 与 `docs/claude/slash-commands.md`，无需在本文件重复维护。
 
