@@ -8,8 +8,9 @@ allowed-tools: Read(*), Write(*), Edit(*), MultiEdit(*), Bash(*), Glob(*), Grep(
 
 ## 适用场景
 
-- 评审 FRD/CRD/DESIGN.md 等设计文档，在开发前发现问题。
+- 评审 Spec/Plan/Design 等设计文档，在开发前发现问题。
 - 需要结构化讨论、记录决策、更新文档。
+- 配合 `/design-review` 命令和 speckit 工作流使用。
 
 ## 前置准备
 

@@ -8,7 +8,7 @@ argument-hint: [path/to/design-doc.md] [--output <file>] [--strict]
 
 ## 参数
 
-- **必填**：设计文档路径（FRD/CRD/DESIGN.md 等）。
+- **必填**：设计文档路径（spec.md/plan.md/design.md 等）。
 - **可选**：`--output <file>`（输出评审纪要）、`--strict`（严格校验未知旗标）。
 - 评审聚焦逻辑设计层，禁止引入数据库迁移等实现细节。
 
