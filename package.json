@@ -76,7 +76,11 @@
       "**/@tarojs",
       "**/@tarojs/**",
       "**/globals",
-      "**/globals/**"
+      "**/globals/**",
+      "**/webpack",
+      "**/webpack/**",
+      "**/webpack-*",
+      "**/webpack-*/**"
     ]
   }
 }
