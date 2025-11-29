@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 私有网段（不走 VPN），供 ShadowsocksVpnService 路由配置使用 -->
+    <string-array name="bypass_private_route">
+        <item>10.0.0.0/8</item>
+        <item>172.16.0.0/12</item>
+        <item>192.168.0.0/16</item>
+        <item>100.64.0.0/10</item>
+        <item>127.0.0.0/8</item>
+    </string-array>
+</resources>
+

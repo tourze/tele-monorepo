@@ -1,0 +1,137 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.facebook.react'
+
+android {
+  namespace "com.example.ssr"
+  compileSdkVersion 34
+
+  defaultConfig {
+    minSdkVersion 23
+    targetSdkVersion 34
+    consumerProguardFiles 'consumer-rules.pro'
+    // 开启 AIDL 以生成 IShadowsocksService* 相关 Binder 类
+  }
+
+  buildFeatures {
+    aidl = true
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions { jvmTarget = "17" }
+  sourceSets {
+    main {
+      java.srcDirs = ["src/main/java"]
+      manifest.srcFile 'src/main/AndroidManifest.xml'
+      // 默认从库内打包预编译 so；当 -PnativeFromSource=true 时禁用，以免与 externalNativeBuild 产物冲突
+      jniLibs.srcDirs = (project.hasProperty('nativeFromSource') && project.property('nativeFromSource') == 'true') ? [] : ["src/main/jniLibs"]
+    }
+  }
+
+  // NDK 源码构建（仅在 -PnativeFromSource=true 时启用）
+  ndkVersion rootProject.ext.ndkVersion
+  if (project.hasProperty('nativeFromSource') && project.property('nativeFromSource') == 'true') {
+    externalNativeBuild {
+      ndkBuild {
+        // 迁移后改为使用库内 jni 源（Android.mk/Application.mk 与源码均在此目录）
+        path file('src/main/jni/Android.mk')
+      }
+    }
+  }
+
+  // 按需启用源码构建（避免无意义构建占时）
+  buildTypes {
+    debug {
+      // 默认不启用源码构建，避免编译器/NDK 差异导致失败；需要时以 -PnativeFromSource=true 开启
+      buildConfigField "boolean", "NATIVE_FROM_SOURCE",
+        project.hasProperty('nativeFromSource') && project.property('nativeFromSource') == 'true' ? "true" : "false"
+      // externalNativeBuild 的 path 已按属性包裹，仅需在 true 时触发
+    }
+    release {
+      buildConfigField "boolean", "NATIVE_FROM_SOURCE",
+        project.hasProperty('nativeFromSource') && project.property('nativeFromSource') == 'true' ? "true" : "false"
+      minifyEnabled false
+      // externalNativeBuild 的 path 已按属性包裹，仅需在 true 时触发
+    }
+  }
+}
+
+// RN 新架构 Codegen 配置（与 package.json 中的 codegenConfig 对齐）
+react {
+  libraryName = "ShadowsocksR"
+  codegenJavaPackageName = "com.example.ssr"
+}
+
+repositories { google(); mavenCentral() }
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+  implementation 'com.github.mike10004:fengyouchao-sockslib:1.0.6'
+  // 日志依赖（库内 GuardedProcessPool 等使用 Timber）
+  implementation 'com.jakewharton.timber:timber:5.0.1'
+}
+
+// 全部构建变体：打包 ACL 为加密压缩文件并移除明文 assets/acl
+afterEvaluate {
+  def aclSourceDir = file("$projectDir/src/main/assets/acl")
+  android.libraryVariants.all { variant ->
+    def capName = variant.name.capitalize()
+    def outDir = file("$buildDir/generated/acl/${variant.name}")
+    def packedFile = new File(outDir, "acl.pack")
+
+    def packTask = tasks.register("pack${capName}Acl") {
+      inputs.dir(aclSourceDir)
+      outputs.file(packedFile)
+      doLast {
+        if (!aclSourceDir.exists()) {
+          logger.lifecycle("未找到 ACL 明文目录，跳过打包")
+          return
+        }
+        outDir.mkdirs()
+        def zipFile = new File(outDir, "acl.zip")
+        ant.zip(destfile: zipFile, basedir: aclSourceDir)
+
+        def baseKey = "0123456789abcdef".getBytes("UTF-8")
+        def salt = new byte[16]
+        new java.security.SecureRandom().nextBytes(salt)
+        def digest = java.security.MessageDigest.getInstance("SHA-256")
+        digest.update(baseKey)
+        digest.update(salt)
+        def keyMaterial = digest.digest()
+        def keyBytes = (keyMaterial[0..15] as byte[])
+        def ivBytes = (keyMaterial[16..31] as byte[])
+
+        def cipher = javax.crypto.Cipher.getInstance("AES/CBC/PKCS5Padding")
+        cipher.init(javax.crypto.Cipher.ENCRYPT_MODE,
+          new javax.crypto.spec.SecretKeySpec(keyBytes, "AES"),
+          new javax.crypto.spec.IvParameterSpec(ivBytes))
+
+        def encrypted = cipher.doFinal(zipFile.bytes)
+        packedFile.withOutputStream { os ->
+          os.write(salt)
+          os.write(encrypted)
+        }
+        zipFile.delete()
+      }
+    }
+
+    variant.mergeAssetsProvider.configure { mergeTask ->
+      dependsOn packTask
+      doLast {
+        def outputDir = mergeTask.outputDir.get().asFile
+        def plainAcl = new File(outputDir, "acl")
+        if (plainAcl.exists()) plainAcl.deleteDir()
+        if (packedFile.exists()) {
+          copy {
+            from packedFile
+            into outputDir
+            rename { "acl.dat" }
+          }
+        }
+      }
+    }
+  }
+}

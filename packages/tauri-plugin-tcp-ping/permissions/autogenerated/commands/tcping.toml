@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-tcping"
+description = "Enables the tcping command without any pre-configured scope."
+commands.allow = ["tcping"]
+
+[[permission]]
+identifier = "deny-tcping"
+description = "Denies the tcping command without any pre-configured scope."
+commands.deny = ["tcping"]

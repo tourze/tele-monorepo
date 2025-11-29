@@ -1,0 +1,7 @@
+[default]
+description = "TCP Ping 插件默认权限"
+permissions = [
+    "allow-tcping",
+    "allow-start-batch-ping",
+    "allow-stop-batch-ping",
+]

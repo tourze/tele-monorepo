@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+// 接入 React Native Gradle 插件以启用新架构 Codegen
+apply plugin: 'com.facebook.react'
+
+android {
+  namespace "com.tcpping"
+  compileSdkVersion 34
+
+  defaultConfig {
+    minSdkVersion 23
+    targetSdkVersion 34
+    consumerProguardFiles 'consumer-rules.pro'
+  }
+
+  // 统一 Java/Kotlin 目标版本，避免与应用侧不一致
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+  sourceSets {
+    main {
+      java.srcDirs = ["src/main/java"]
+      manifest.srcFile 'src/main/AndroidManifest.xml'
+    }
+  }
+}
+
+// RN 新架构 Codegen：与 package.json 的 codegenConfig 保持一致
+react {
+  // 模块名（需与 JS 侧 TurboModuleRegistry.getEnforcing("TcpPing") 对齐）
+  libraryName = "TcpPing"
+  // 生成的 Spec 所在包名
+  codegenJavaPackageName = "com.tcpping"
+}
+
+repositories {
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  // 适配 RN 0.74+ 的 Android 依赖坐标
+  implementation "com.facebook.react:react-android"
+}

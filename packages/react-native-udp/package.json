@@ -1,0 +1,42 @@
+{
+  "name": "react-native-udp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "React Native 跨端 UDP 套接字模块",
+  "main": "src/index.ts",
+  "react-native": "src/index.ts",
+  "types": "src/index.d.ts",
+  "files": [
+    "src",
+    "android",
+    "ios"
+  ],
+  "keywords": [
+    "react-native",
+    "udp",
+    "network",
+    "sockets"
+  ],
+  "codegenConfig": {
+    "name": "Udp",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.reactnativeudp"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "react": ">=18 <19",
+    "react-native": ">=0.74 <0.82"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "react-native-builder-bob": "^0.40.13",
+    "typescript": "^5.9.2"
+  }
+}

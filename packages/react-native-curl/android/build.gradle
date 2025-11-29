@@ -1,0 +1,60 @@
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+apply plugin: "com.facebook.react"
+
+def safeExtGet(prop, fallback) {
+  return rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+android {
+  namespace "com.reactnativecurl"
+  compileSdkVersion safeExtGet("Curl_compileSdkVersion", 34)
+
+  defaultConfig {
+    minSdkVersion safeExtGet("Curl_minSdkVersion", 24)
+    targetSdkVersion safeExtGet("Curl_targetSdkVersion", 34)
+    consumerProguardFiles "consumer-rules.pro"
+
+    externalNativeBuild {
+      cmake {
+        arguments "-DANDROID_STL=c++_shared"
+      }
+    }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path "src/main/cpp/CMakeLists.txt"
+    }
+  }
+
+  ndkVersion safeExtGet("Curl_ndkVersion", "27.1.12297006")
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+  sourceSets {
+    main {
+      java.srcDirs = ["src/main/java"]
+      manifest.srcFile "src/main/AndroidManifest.xml"
+    }
+  }
+}
+
+react {
+  libraryName = "Curl"
+  codegenJavaPackageName = "com.reactnativecurl"
+}
+
+repositories {
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+}

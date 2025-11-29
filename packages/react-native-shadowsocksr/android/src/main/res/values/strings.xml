@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PDNSD 黑名单占位（用于生成 exclude = ...;） -->
+    <string name="black_list">224.0.0.0/3</string>
+</resources>
+
