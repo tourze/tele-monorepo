@@ -1,0 +1,13 @@
+{
+    "local_address": "0.0.0.0",
+    "local_port": 1131,
+    "server": "zhongzhuan-test-001-fz.quicafe.com",
+    "server_port": 16071,
+    "password": "hGkQ6915tD",
+    "method": "aes-256-cfb",
+    "protocol": "auth_golang_v2",
+    "protocol_param": "510074:e905cd02ea",
+    "obfs": "plain",
+    "obfs_param": "",
+    "mode": "tcp_and_udp"
+}

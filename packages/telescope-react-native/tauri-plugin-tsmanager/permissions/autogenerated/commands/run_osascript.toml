@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-run-osascript"
+description = "Enables the run_osascript command without any pre-configured scope."
+commands.allow = ["run_osascript"]
+
+[[permission]]
+identifier = "deny-run-osascript"
+description = "Denies the run_osascript command without any pre-configured scope."
+commands.deny = ["run_osascript"]

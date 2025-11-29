@@ -1,0 +1,441 @@
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+// 字符串加密
+apply plugin: 'stringfog'
+// DEX控制流混淆
+//apply plugin: 'top.niunaijun.blackobfuscator'
+// 垃圾代码生成
+apply plugin: 'android-junk-code'
+// 日志收集
+apply plugin: 'newrelic'
+
+// 导入StringFog密钥生成器
+import com.github.megatronking.stringfog.plugin.kg.HardCodeKeyGenerator
+import com.github.megatronking.stringfog.plugin.StringFogMode
+import java.util.UUID
+
+abstract class GenerateNoiseTask extends DefaultTask {
+  @OutputDirectory
+  abstract DirectoryProperty getJavaOutput()
+
+  @OutputDirectory
+  abstract DirectoryProperty getResOutput()
+
+  @Input
+  abstract Property<String> getVariantName()
+
+  GenerateNoiseTask() {
+    outputs.upToDateWhen { false } // 总是重新生成，避免缓存静态输出
+  }
+
+  @TaskAction
+  void generate() {
+    def javaDir = javaOutput.get().asFile
+    def resDir = new File(resOutput.get().asFile, "values")
+    javaDir.mkdirs()
+    resDir.mkdirs()
+
+    int fileCount = 4 + new Random(System.nanoTime()).nextInt(4) // 4~7 个随机类/资源
+    def resBuilder = new StringBuilder()
+    resBuilder.append("<resources>\n")
+
+    (0..<fileCount).each { idx ->
+      def token = UUID.randomUUID().toString().replace("-", "")
+      def className = "Noise${token.substring(0, 8)}"
+      def pkg = "com.reactnative.noise.${variantName.get()}"
+      def pkgDir = new File(javaDir, pkg.replace(".", "/"))
+      pkgDir.mkdirs()
+      def javaFile = new File(pkgDir, "${className}.java")
+      javaFile.text = """
+        package ${pkg};
+        public class ${className} {
+          public static final String NOISE = "${token}";
+          public String ping${idx}(int v) { return NOISE + ":" + v + ":" + System.nanoTime(); }
+          public int mix${idx}(int a, int b) { return (a ^ b) ^ NOISE.hashCode(); }
+        }
+      """.stripIndent()
+
+      resBuilder.append("  <string name=\"noise_${variantName.get()}_${idx}\">${token}_${System.currentTimeMillis()}</string>\n")
+    }
+
+    resBuilder.append("</resources>\n")
+    def resFile = new File(resDir, "noise_${variantName.get()}.xml")
+    resFile.text = resBuilder.toString()
+  }
+}
+
+def acraVersion = '5.11.3'
+
+def stringFogKey = project.hasProperty('STRING_FOG_KEY') ? project.property('STRING_FOG_KEY') : UUID.randomUUID().toString().replace("-", "")
+def randomSeed = project.hasProperty('JUNK_SEED') ? new Random(project.property('JUNK_SEED').toString().hashCode()) : new Random(System.currentTimeMillis())
+def alphaLetters = ('a'..'z').join()
+def randInRange = { int min, int max -> min + randomSeed.nextInt((max - min) + 1) }
+def randomToken = { int len -> (0..<len).collect { alphaLetters[randomSeed.nextInt(alphaLetters.length())] }.join() }
+def randomResPrefix = { "R${randomToken(8)}" }
+def buildNoise = project.hasProperty('BUILD_NOISE') ? project.property('BUILD_NOISE') : UUID.randomUUID().toString().replace("-", "")
+
+/**
+ * This is the configuration block to customize your React Native Android app.
+ * By default you don't need to apply any configuration, just uncomment the lines you need.
+ */
+react {
+    /* Folders */
+    //   The root of your project, i.e. where "package.json" lives. Default is '..'
+    // root = file("../")
+    //   指向当前 App 的 node_modules（相对 android/app -> ../../node_modules）
+    //   React Native 包路径
+    reactNativeDir = file("../../node_modules/react-native")
+    //   Codegen 包路径
+    codegenDir = file("../../node_modules/@react-native/codegen")
+    //   CLI 入口文件路径
+    cliFile = file("../../node_modules/react-native/cli.js")
+
+    /* Variants */
+    //   The list of variants to that are debuggable. For those we're going to
+    //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
+    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
+    // debuggableVariants = ["liteDebug", "prodDebug"]
+
+    /* Bundling */
+    //   A list containing the node command and its flags. Default is just 'node'.
+    // nodeExecutableAndArgs = ["node"]
+    //
+    //   The command to run when bundling. By default is 'bundle'
+    // bundleCommand = "ram-bundle"
+    //
+    //   The path to the CLI configuration file. Default is empty.
+    // bundleConfig = file(../rn-cli.config.js)
+    //
+    //   The name of the generated asset file containing your JS bundle
+    // bundleAssetName = "MyApplication.android.bundle"
+    //
+    //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
+    entryFile = file("../../src/main.tsx")
+    //
+    //   A list of extra flags to pass to the 'bundle' commands.
+    //   See https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
+    // extraPackagerArgs = []
+
+    /* Hermes Commands */
+    //   Hermes 编译器绝对路径（兼容 monorepo，就近优先，避免相对路径在不同工作目录下失效）
+    def _os = org.gradle.internal.os.OperatingSystem.current()
+    def _hermesDir = _os.isLinux() ? 'linux64-bin' : (_os.isMacOsX() ? 'osx-bin' : (_os.isWindows() ? 'win64-bin' : 'linux64-bin'))
+    def _hermesBin = _os.isWindows() ? 'hermesc.exe' : 'hermesc'
+    def hermesCandidates = [
+        "../../node_modules/react-native/sdks/hermesc/${_hermesDir}/${_hermesBin}",
+        "../../../../node_modules/react-native/sdks/hermesc/${_hermesDir}/${_hermesBin}"
+    ]
+    def hermesPath = hermesCandidates.find { file(it).exists() }
+    if (hermesPath == null) {
+        throw new GradleException("未找到 hermesc 编译器，请确认 React Native 安装路径: " + hermesCandidates)
+    }
+    hermesCommand = file(hermesPath).getAbsolutePath()
+    //
+    //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
+    // hermesFlags = ["-O", "-output-source-map"]
+}
+
+/**
+ * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ */
+def enableProguardInReleaseBuilds = true
+
+/**
+ * The preferred build flavor of JavaScriptCore (JSC)
+ *
+ * For example, to use the international variant, you can use:
+ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ *
+ * The international variant includes ICU i18n library and necessary data
+ * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
+ * give correct results when using with locales other than en-US. Note that
+ * this variant is about 6MiB larger per architecture than default.
+ */
+def jscFlavor = 'org.webkit:android-jsc:+'
+
+android {
+    ndkVersion rootProject.ext.ndkVersion
+    compileSdk rootProject.ext.compileSdkVersion
+
+    buildFeatures {
+        aidl = true
+        buildConfig = true
+    }
+
+    namespace "com.reactnative"
+    defaultConfig {
+        applicationId "com.telescope.pro"
+        minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    versionCode 338
+    versionName "3.2.2"
+
+    buildConfigField "String", "PROD_CERT_SHA1", "\"B6:1B:E0:FC:0A:8F:E7:A7:34:7B:A1:99:2E:9B:74:37:DC:29:3A:74\""
+    buildConfigField "String", "BUILD_NOISE", "\"${buildNoise}\""
+  }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+        release {
+            storeFile file('telescope-prod.keystore')
+            storePassword 'TelescopeProd#2024'
+            keyAlias 'telescopeprod'
+            keyPassword 'TelescopeProd#2024'
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://reactnative.dev/docs/signed-apk-android.
+            signingConfig signingConfigs.release
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    flavorDimensions "channel"
+
+    productFlavors {
+        gw {
+            dimension "channel"
+            //applicationIdSuffix ".gw"
+            buildConfigField "String", "CHANNEL_NAME", "\"GW\""
+        }
+        sm {
+            dimension "channel"
+            //applicationIdSuffix ".sm"
+            resValue "string", "app_name", "探索者加速器"
+            buildConfigField "String", "CHANNEL_NAME", "\"SM\""
+        }
+        bd {
+            dimension "channel"
+            //applicationIdSuffix ".bd"
+            buildConfigField "String", "CHANNEL_NAME", "\"BD\""
+        }
+        sl {
+            dimension "channel"
+            //applicationIdSuffix ".sl"
+            buildConfigField "String", "CHANNEL_NAME", "\"SL\""
+        }
+        sk {
+            dimension "channel"
+            //applicationIdSuffix ".sk"
+            buildConfigField "String", "CHANNEL_NAME", "\"SK\""
+        }
+        sj {
+            dimension "channel"
+            //applicationIdSuffix ".sj"
+            buildConfigField "String", "CHANNEL_NAME", "\"SJ\""
+        }
+        wc {
+            dimension "channel"
+            //applicationIdSuffix ".wc"
+            buildConfigField "String", "CHANNEL_NAME", "\"WC\""
+        }
+        wb {
+            dimension "channel"
+            //applicationIdSuffix ".wb"
+            buildConfigField "String", "CHANNEL_NAME", "\"WB\""
+        }
+        wa {
+            dimension "channel"
+            //applicationIdSuffix ".wa"
+            buildConfigField "String", "CHANNEL_NAME", "\"WA\""
+        }
+        sg {
+            dimension "channel"
+            //applicationIdSuffix ".sg"
+            buildConfigField "String", "CHANNEL_NAME", "\"SG\""
+        }
+        gp {
+            dimension "channel"
+            //applicationIdSuffix ".gp"
+            buildConfigField "String", "CHANNEL_NAME", "\"GP\""
+        }
+        nh {
+            dimension "channel"
+            //applicationIdSuffix ".nh"
+            buildConfigField "String", "CHANNEL_NAME", "\"NH\""
+        }
+        pj {
+            dimension "channel"
+            //applicationIdSuffix ".pj"
+            buildConfigField "String", "CHANNEL_NAME", "\"PJ\""
+        }
+        gm {
+            dimension "channel"
+            //applicationIdSuffix ".gm"
+            buildConfigField "String", "CHANNEL_NAME", "\"GM\""
+        }
+        si {
+            dimension "channel"
+            //applicationIdSuffix ".si"
+            buildConfigField "String", "CHANNEL_NAME", "\"SI\""
+        }
+        mtp {
+            dimension "channel"
+            //applicationIdSuffix ".mtp"
+            buildConfigField "String", "CHANNEL_NAME", "\"MTP\""
+        }
+        sd {
+            dimension "channel"
+            //applicationIdSuffix ".sd"
+            resValue "string", "app_name", "探索者加速器"
+            buildConfigField "String", "CHANNEL_NAME", "\"SD\""
+        }
+        ss {
+            dimension "channel"
+            //applicationIdSuffix ".ss"
+            buildConfigField "String", "CHANNEL_NAME", "\"SS\""
+        }
+        qh {
+            dimension "channel"
+            //applicationIdSuffix ".qh"
+            resValue "string", "app_name", "探索者加速器"
+            buildConfigField "String", "CHANNEL_NAME", "\"QH\""
+        }
+    }
+
+    // 预编译 so 现已随库打包（react-native-shadowsocksr/android/src/main/jniLibs），应用侧不再从 app/libs 打包
+    // 保留空配置，避免与库产物重复
+    sourceSets {
+        main { jniLibs.srcDirs = [] }
+    }
+}
+
+// 输出包名包含渠道与版本号，方便区分产物
+android.applicationVariants.all { variant ->
+  variant.outputs.all { output ->
+    def flavor = variant.flavorName ? "${variant.flavorName}-" : ""
+    def buildType = variant.buildType?.name ?: variant.buildType ?: "release"
+    def version = variant.versionName ?: "unknown"
+    def originalName = output.outputFileName
+    def ext = (originalName && originalName.lastIndexOf(".") > 0) ? originalName.substring(originalName.lastIndexOf(".")) : ".apk"
+    output.outputFileName = "app-${flavor}${version}-${buildType}${ext}"
+  }
+}
+
+// 字符串加密
+stringfog {
+  // 必要：加解密库的实现类路径，需和上面配置的加解密算法库一致。
+  implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
+  // 可选：StringFog会自动尝试获取packageName，如果遇到获取失败的情况，可以显式地指定。
+  packageName 'com.github.megatronking.stringfog.app'
+  // 可选：加密开关，默认开启。
+  enable true
+  // 可选：指定需加密的代码包路径，可配置多个，未指定将默认全部加密。
+  fogPackages = [
+    "com.github.shadowsocks",
+    "com.shadow.ssrclient.dns",
+  ]
+  // 可选（3.0版本新增）：指定密钥生成器，默认使用长度8的随机密钥（每个字符串均有不同随机密钥）,
+  // 也可以指定一个固定的密钥：HardCodeKeyGenerator("This is a key")
+  kg new HardCodeKeyGenerator(stringFogKey)
+  // 可选（4.0版本新增）：用于控制字符串加密后在字节码中的存在形式, 默认为base64，
+  // 也可以使用text或者bytes
+  mode StringFogMode.bytes
+}
+
+afterEvaluate {
+  androidJunkCode {
+    variantConfig {
+      android.productFlavors.each { flavor ->
+        def variantName = "${flavor.name}Release"
+        "${variantName}" {
+          packageBase = "com.shadow.ssrclient.service.${flavor.name}.${randomToken(4)}"
+          packageCount = randInRange(14, 24)
+          activityCountPerPackage = randInRange(2, 4)
+          excludeActivityJavaFile = false
+          otherCountPerPackage = randInRange(26, 38)
+          methodCountPerClass = randInRange(5, 8)
+          resPrefix = randomResPrefix()
+          drawableCount = randInRange(140, 220)
+          stringCount = randInRange(110, 190)
+        }
+      }
+    }
+  }
+}
+
+androidComponents {
+  onVariants(selector().all()) { variant ->
+    def capitalized = variant.name.capitalize()
+    def taskProvider = tasks.register("generate${capitalized}Noise", GenerateNoiseTask) {
+      variantName.set(variant.name)
+      javaOutput.set(layout.buildDirectory.dir("generated/vibeNoise/${variant.name}/java"))
+      resOutput.set(layout.buildDirectory.dir("generated/vibeNoise/${variant.name}/res"))
+    }
+
+    variant.sources.java?.addGeneratedSourceDirectory(taskProvider, { it.javaOutput })
+    variant.sources.res?.addGeneratedSourceDirectory(taskProvider, { it.resOutput })
+  }
+}
+
+dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
+    implementation("com.facebook.react:react-android")
+
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+
+    // https://reactnative.dev/docs/image
+    // If your app supports Android versions before Ice Cream Sandwich (API level 14)
+    implementation 'com.facebook.fresco:animated-base-support:1.3.0'
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:3.1.3'
+    // For WebP support, including animated WebP
+    implementation 'com.facebook.fresco:animated-webp:3.1.3'
+    implementation 'com.facebook.fresco:webpsupport:3.1.3'
+
+  // 简单加密字符串啦
+  implementation 'com.github.megatronking.stringfog:xor:5.0.0'
+  // 方便我们打印东西
+  implementation 'com.google.code.gson:gson:2.11.0'
+  api("com.jakewharton.timber:timber:5.0.1")
+  implementation 'com.qiniu:happy-dns:2.0.1'
+  implementation 'eu.chainfire:libsuperuser:1.1.1'
+  // 连接socks5地址
+  implementation group: 'com.github.mike10004', name: 'fengyouchao-sockslib', version: '1.0.6'
+  // STUN协议客户端
+  implementation group: 'de.javawi.jstun', name: 'jstun', version: '0.7.4'
+  // Duplicate class com.google.common.util.concurrent.ListenableFuture found in modules guava-19.0.jar -> jetified-guava-19.0 (com.google.guava:guava:19.0) and listenablefuture-1.0.jar -> jetified-listenablefuture-1.0 (com.google.guava:listenablefuture:1.0)
+  implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-android'
+}
+
+// 该 Gradle 脚本由工作区根 node_modules 提供
+// 兼容 monorepo 布局：优先使用工作区内 node_modules，找不到时回退到仓库根 node_modules
+def rnCliAppGradleCandidates = [
+        '../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle',
+        '../../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle'
+]
+def rnCliAppGradlePath = rnCliAppGradleCandidates.find { file(it).exists() }
+if (rnCliAppGradlePath == null) {
+    throw new GradleException("未找到 native_modules.gradle（app），请确认 React Native CLI 安装路径: " + rnCliAppGradleCandidates)
+}
+apply from: file(rnCliAppGradlePath); applyNativeModulesAppBuildGradle(project)
+
+//project.ext.vectoricons = [
+//    iconFontNames: [ 'Ionicons.ttf' ] // Specify font files
+//]
+// 兼容 monorepo：就近优先查找 react-native-vector-icons 的 fonts.gradle
+def rnVectorIconsGradleCandidates = [
+        '../../node_modules/react-native-vector-icons/fonts.gradle',
+        '../../../../node_modules/react-native-vector-icons/fonts.gradle'
+]
+def rnVectorIconsGradlePath = rnVectorIconsGradleCandidates.find { file(it).exists() }
+if (rnVectorIconsGradlePath != null) {
+    apply from: file(rnVectorIconsGradlePath)
+} else {
+    println "warning: 未找到 react-native-vector-icons/fonts.gradle，跳过字体任务"
+}

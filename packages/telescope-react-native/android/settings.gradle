@@ -1,0 +1,29 @@
+rootProject.name = 'TelescopeReactNative'
+
+// 兼容 monorepo + Yarn nohoist 与 hoist 两种布局，优先使用工作区内的 node_modules
+def rnCliGradleCandidates = [
+        // 工作区本地 node_modules（apps/telescope-react-native/node_modules）
+        '../node_modules/@react-native-community/cli-platform-android/native_modules.gradle',
+        // monorepo 根 node_modules（被 hoist 到根的场景）
+        '../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle'
+]
+def rnCliGradlePath = rnCliGradleCandidates.find { file(it).exists() }
+if (rnCliGradlePath == null) {
+    throw new GradleException("未找到 native_modules.gradle，请确认 React Native CLI 已安装于工作区或根节点模块: " + rnCliGradleCandidates)
+}
+apply from: file(rnCliGradlePath); applyNativeModulesSettingsGradle(settings)
+
+include ':app'
+
+// 同样对 @react-native/gradle-plugin 做路径回退
+def rnGradlePluginCandidates = [
+        '../node_modules/@react-native/gradle-plugin',
+        '../../../node_modules/@react-native/gradle-plugin'
+]
+def rnGradlePluginPath = rnGradlePluginCandidates.find { file(it).exists() }
+if (rnGradlePluginPath != null) {
+    includeBuild(rnGradlePluginPath)
+} else {
+    // 未找到时允许继续（旧版本 RN 可能未使用该插件）
+    println "warning: 未找到 @react-native/gradle-plugin，已跳过 includeBuild"
+}

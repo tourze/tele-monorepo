@@ -10,7 +10,7 @@
     "git:pull-all": "node scripts/git-sync-all.js pull",
     "openspec:validate": "node scripts/openspec-validate.js",
     "openspec:init": "echo 'OpenSpec 已初始化。运行 yarn openspec:validate 可执行验证。'",
-    "reinstall": "rimraf node_modules yarn.lock package-lock.json apps/*/node_modules packages/*/node_modules && yarn install",
+    "reinstall": "rimraf node_modules yarn.lock package-lock.json packages/*/node_modules && yarn install",
     "list-projects": "node scripts/list-workspaces.js"
   },
   "private": true,
@@ -37,7 +37,6 @@
   },
   "workspaces": {
     "packages": [
-      "apps/*",
       "packages/*"
     ],
     "nohoist": [

@@ -1,0 +1,83 @@
+{
+  "name": "telescope-react-native",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/telescope-react-native/src",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project telescope-react-native --web",
+  "targets": {
+    "package-android": {
+      "command": "cd apps/telescope-react-native/android && ./gradlew channelRelease && cd ../../../ && rm -rf dist/apks/telescope-react-native && mkdir -p dist/apks/telescope-react-native && mv apps/telescope-react-native/android/app/build/channels/*.apk dist/apks/telescope-react-native"
+    },
+    "tauri:build": {
+      "cache": true,
+      "executor": "@monodon/rust:build",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "dist/target/telescope-react-native"
+      },
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "tauri:test": {
+      "cache": true,
+      "executor": "@monodon/rust:test",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "dist/target/telescope-react-native"
+      },
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "lint": {
+      "cache": true,
+      "executor": "@monodon/rust:lint",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "dist/target/telescope-react-native"
+      }
+    },
+    "tauri:run": {
+      "executor": "@monodon/rust:run",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "dist/target/telescope-react-native"
+      },
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "dev-1": {
+      "command": "cd apps/telescope-react-native && cargo tauri dev"
+    },
+    "build-windows-x86": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target x86_64-pc-windows-msvc --runner cargo-xwin"
+    },
+    "build-windows-arm": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target aarch64-pc-windows-msvc --runner cargo-xwin"
+    },
+    "build-macos-m1": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target aarch64-apple-darwin"
+    },
+    "build-macos-intel": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target x86_64-apple-darwin"
+    },
+    "build-macos-universal": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target universal-apple-darwin"
+    },
+    "build-linux-x86": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target x86_64-unknown-linux-gnu"
+    },
+    "build-linux-arm": {
+      "command": "cd apps/telescope-react-native && cargo tauri build --target aarch64-unknown-linux-gnu"
+    }
+  }
+}

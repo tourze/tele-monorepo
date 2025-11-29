@@ -1,0 +1,18 @@
+[default]
+description = "Default permissions for the plugin"
+permissions = [
+    "allow-count-processes-by-name",
+    "allow-curl-fetch",
+    "allow-disable-os-proxy",
+    "allow-export-app-logs",
+    "allow-get-current-user",
+    "allow-is-debugger-present",
+    "allow-is-elevated",
+    "allow-kill-processes-by-name",
+    "allow-read-file-content",
+    "allow-read-qr-code",
+    "allow-run-elevated-command",
+    "allow-run-osascript",
+    "allow-write-file",
+    "allow-ping",
+]

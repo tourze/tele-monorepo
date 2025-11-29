@@ -1,0 +1,88 @@
+FROM node:20-bullseye AS node20
+
+FROM rust:1-bullseye
+
+# 可选构建期代理
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+ARG http_proxy
+ARG https_proxy
+ARG no_proxy
+ENV HTTP_PROXY=${HTTP_PROXY} \
+    HTTPS_PROXY=${HTTPS_PROXY} \
+    NO_PROXY=${NO_PROXY} \
+    http_proxy=${http_proxy} \
+    https_proxy=${https_proxy} \
+    no_proxy=${no_proxy}
+
+# 基础依赖：clang/lld、nsis、Node.js 20 + Yarn 1
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --no-install-recommends \
+      ca-certificates curl git pkg-config clang lld llvm make zip unzip nsis openssl \
+      build-essential python3 \
+      mingw-w64 \
+      libappindicator3-dev libappindicator3-1 \
+      libayatana-appindicator3-dev libayatana-appindicator3-1 \
+    && rm -rf /var/lib/apt/lists/* \
+    # 兼容 cargo-xwin 期望的工具名
+    && ln -sf "$(command -v clang)" /usr/local/bin/clang-cl || true \
+    && (command -v lld-link >/dev/null 2>&1 || ln -sf "$(command -v ld.lld)" /usr/local/bin/lld-link || true) \
+    && bash -lc 't=$(command -v llvm-ar || command -v llvm-ar-18 || command -v llvm-ar-17 || command -v llvm-ar-16 || command -v llvm-ar-15 || command -v llvm-ar-14 || command -v llvm-ar-13 || command -v llvm-ar-12 || command -v llvm-ar-11 || true); if [ -n "$t" ]; then ln -sf "$t" /usr/local/bin/llvm-lib; fi'
+
+# 引入 Node 20（直接复制二进制，避免再次联网）
+COPY --from=node20 /usr/local/bin/node /usr/local/bin/node
+COPY --from=node20 /usr/local/bin/corepack /usr/local/bin/corepack
+COPY --from=node20 /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+    && npm i -g yarn@1.22.22
+
+# Rust 环境
+ENV CARGO_HOME=/usr/local/cargo \
+    RUSTUP_HOME=/usr/local/rustup \
+    PATH=/usr/local/cargo/bin:$PATH \
+    RUSTUP_DIST_SERVER=https://rsproxy.cn \
+    RUSTUP_UPDATE_ROOT=https://rsproxy.cn/rustup \
+    CARGO_HTTP_MULTIPLEXING=false
+
+# 预安装 Windows 目标与构建工具，减少运行期失败
+RUN set -eux; \
+    rustup target add x86_64-pc-windows-msvc; \
+    cargo install cargo-xwin; \
+    npm i -g @tauri-apps/cli@^2
+
+# 包装 makensis（兼容性处理），可选
+RUN set -eux; \
+  if command -v makensis >/dev/null 2>&1; then \
+    mv "$(command -v makensis)" /usr/local/bin/makensis.real; \
+    printf '%s\n' \
+      '#!/usr/bin/env bash' \
+      'set -euo pipefail' \
+      '' \
+      '# 尝试找出 .nsi 主脚本路径' \
+      'NSI=""' \
+      'for a in "$@"; do' \
+      '  if [ -f "$a" ] && [[ "$a" == *.nsi ]]; then NSI="$a"; break; fi' \
+      'done' \
+      '' \
+      'if [ -n "${NSI}" ]; then' \
+      '  DIR="$(dirname "$NSI")"' \
+      '  # 在 utils.nsh 中注释掉 ICustomDestinationList 等调用' \
+      '  if [ -f "$DIR/utils.nsh" ]; then' \
+      '    sed -i '\''s/\${ICustomDestinationList::DeleteList}.*/; &/'\'' "$DIR/utils.nsh" || true' \
+      '    sed -i '\''s/\${IApplicationDestinations::SetAppID}.*/; &/'\'' "$DIR/utils.nsh" || true' \
+      '    sed -i '\''s/\${IApplicationDestinations::RemoveAllDestinations}.*/; &/'\'' "$DIR/utils.nsh" || true' \
+      '  fi' \
+      'fi' \
+      '' \
+      'exec /usr/local/bin/makensis.real "$@"' \
+      > /usr/local/bin/makensis; \
+    chmod +x /usr/local/bin/makensis; \
+  else \
+    printf '#!/usr/bin/env bash\nexec /usr/bin/makensis "$@"\n' > /usr/local/bin/makensis; \
+    chmod +x /usr/local/bin/makensis; \
+  fi
+
+WORKDIR /work
+ENTRYPOINT ["/bin/bash","-lc"]

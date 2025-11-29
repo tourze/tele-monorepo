@@ -1,0 +1,104 @@
+FROM node:20-bullseye AS node20
+
+FROM rust:1-bullseye
+
+# 代理可选：在构建阶段透传并设置环境变量，解决网络/DNS 问题
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+ARG http_proxy
+ARG https_proxy
+ARG no_proxy
+ENV HTTP_PROXY=${HTTP_PROXY} \
+    HTTPS_PROXY=${HTTPS_PROXY} \
+    NO_PROXY=${NO_PROXY} \
+    http_proxy=${http_proxy} \
+    https_proxy=${https_proxy} \
+    no_proxy=${no_proxy}
+
+# 基础依赖：clang/lld、nsis 以及 Node.js 20 + Yarn 1
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --no-install-recommends \
+      ca-certificates curl git pkg-config clang lld llvm make zip unzip nsis openssl \
+      build-essential python3 \
+      libayatana-appindicator3-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    # 兼容 cargo-xwin 期望的工具名：提供 clang-cl / lld-link / llvm-lib
+    && ln -sf "$(command -v clang)" /usr/local/bin/clang-cl || true \
+    && (command -v lld-link >/dev/null 2>&1 || ln -sf "$(command -v ld.lld)" /usr/local/bin/lld-link || true) \
+    && bash -lc 't=$(command -v llvm-ar || command -v llvm-ar-18 || command -v llvm-ar-17 || command -v llvm-ar-16 || command -v llvm-ar-15 || command -v llvm-ar-14 || command -v llvm-ar-13 || command -v llvm-ar-12 || command -v llvm-ar-11 || true); if [ -n "$t" ]; then ln -sf "$t" /usr/local/bin/llvm-lib; fi'
+
+# 引入 Node 20（从官方 node:20-bullseye 复制，避免再次联网安装）
+COPY --from=node20 /usr/local/bin/node /usr/local/bin/node
+COPY --from=node20 /usr/local/bin/corepack /usr/local/bin/corepack
+COPY --from=node20 /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+    && npm i -g yarn@1.22.22
+
+# 配置 Rust + cargo-xwin（用于 MSVC 目标交叉编译）
+ENV CARGO_HOME=/usr/local/cargo \
+    RUSTUP_HOME=/usr/local/rustup \
+    PATH=/usr/local/cargo/bin:$PATH
+
+# 为 Cargo 与 Rustup 配置国内镜像与更稳定的网络设置，降低 crates.io 超时概率
+ENV RUSTUP_DIST_SERVER=https://rsproxy.cn \
+    RUSTUP_UPDATE_ROOT=https://rsproxy.cn/rustup \
+    CARGO_HTTP_MULTIPLEXING=false
+
+# 写入 Cargo 源配置，使用 rsproxy 的 sparse 索引；并开启 git-fetch-with-cli 提升稳定性
+RUN set -eux; \
+    mkdir -p "$CARGO_HOME"; \
+    cat > "$CARGO_HOME/config.toml" <<'EOF' \
+[source.crates-io]\
+replace-with = 'rsproxy-sparse'\
+\
+[source.rsproxy]\
+registry = 'https://github.com/rust-lang/crates.io-index'\
+\
+[source.rsproxy-sparse]\
+registry = 'sparse+https://rsproxy.cn/index/'\
+\
+[net]\
+git-fetch-with-cli = true\
+retry = 3\
+EOF
+
+RUN true
+
+# 包装 makensis：在生成的 utils.nsh 中禁用 ICustomDestinationList 调用，避免旧版 NSIS Include 缺少该接口导致的编译期报错
+RUN set -eux; \
+  if command -v makensis >/dev/null 2>&1; then \
+    mv "$(command -v makensis)" /usr/local/bin/makensis.real; \
+    printf '%s\n' \
+      '#!/usr/bin/env bash' \
+      'set -euo pipefail' \
+      '' \
+      '# 尝试找出 .nsi 主脚本路径' \
+      'NSI=""' \
+      'for a in "$@"; do' \
+      '  if [ -f "$a" ] && [[ "$a" == *.nsi ]]; then NSI="$a"; break; fi' \
+      'done' \
+      '' \
+      'if [ -n "${NSI}" ]; then' \
+      '  DIR="$(dirname "$NSI")"' \
+      '  # 在 utils.nsh 中注释掉 ICustomDestinationList 调用（DeleteAppUserModelId 宏内部）' \
+      '  if [ -f "$DIR/utils.nsh" ]; then' \
+      '    sed -i '\''s/\${ICustomDestinationList::DeleteList}.*/; &/'\'' "$DIR/utils.nsh" || true' \
+      '    sed -i '\''s/\${IApplicationDestinations::SetAppID}.*/; &/'\'' "$DIR/utils.nsh" || true' \
+      '    sed -i '\''s/\${IApplicationDestinations::RemoveAllDestinations}.*/; &/'\'' "$DIR/utils.nsh" || true' \
+      '  fi' \
+      'fi' \
+      '' \
+      'exec /usr/local/bin/makensis.real "$@"' \
+      > /usr/local/bin/makensis; \
+    chmod +x /usr/local/bin/makensis; \
+  else \
+    printf '#!/usr/bin/env bash\nexec /usr/bin/makensis "$@"\n' > /usr/local/bin/makensis; \
+    chmod +x /usr/local/bin/makensis; \
+  fi
+
+WORKDIR /work
+
+# 以交互 shell 运行，便于在 docker run 时传入构建命令
+ENTRYPOINT ["/bin/bash","-lc"]

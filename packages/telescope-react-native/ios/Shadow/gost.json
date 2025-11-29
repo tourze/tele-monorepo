@@ -1,0 +1,1 @@
+{"Debug": true, "Retries": 0, "Routes": [{"ServeNodes": ["relay+ws://:48000/127.0.0.1:20001"], "ChainNodes": []}, {}], "ServeNodes": [], "ChainNodes": []}

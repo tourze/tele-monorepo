@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-is-elevated"
+description = "Enables the is_elevated command without any pre-configured scope."
+commands.allow = ["is_elevated"]
+
+[[permission]]
+identifier = "deny-is-elevated"
+description = "Denies the is_elevated command without any pre-configured scope."
+commands.deny = ["is_elevated"]

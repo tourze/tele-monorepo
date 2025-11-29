@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-curl-fetch"
+description = "Enables the curl_fetch command without any pre-configured scope."
+commands.allow = ["curl_fetch"]
+
+[[permission]]
+identifier = "deny-curl-fetch"
+description = "Denies the curl_fetch command without any pre-configured scope."
+commands.deny = ["curl_fetch"]

@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-run-elevated-command"
+description = "Enables the run_elevated_command command without any pre-configured scope."
+commands.allow = ["run_elevated_command"]
+
+[[permission]]
+identifier = "deny-run-elevated-command"
+description = "Denies the run_elevated_command command without any pre-configured scope."
+commands.deny = ["run_elevated_command"]

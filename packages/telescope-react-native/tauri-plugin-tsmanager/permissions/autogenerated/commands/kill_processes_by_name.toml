@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-kill-processes-by-name"
+description = "Enables the kill_processes_by_name command without any pre-configured scope."
+commands.allow = ["kill_processes_by_name"]
+
+[[permission]]
+identifier = "deny-kill-processes-by-name"
+description = "Denies the kill_processes_by_name command without any pre-configured scope."
+commands.deny = ["kill_processes_by_name"]

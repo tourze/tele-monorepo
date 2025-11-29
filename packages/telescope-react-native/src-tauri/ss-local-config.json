@@ -1,0 +1,13 @@
+{
+    "local_address": "0.0.0.0",
+    "local_port": 1130,
+    "server": "iepl-hn.cctelescope.xyz",
+    "server_port": 35092,
+    "password": "hGkQ6915tD",
+    "method": "aes-256-cfb",
+    "protocol": "auth_aes128_md5",
+    "protocol_param": "420578:q6NJE2O0Uk",
+    "obfs": "tls1.2_ticket_auth",
+    "obfs_param": "ajax.microsoft.com",
+    "mode": "tcp_and_udp"
+}
