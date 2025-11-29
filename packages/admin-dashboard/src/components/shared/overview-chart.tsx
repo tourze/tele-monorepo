@@ -39,18 +39,18 @@ const areaChartData = [
 ];
 
 const barChartData = [
-  { name: '1月', total: 4500 },
-  { name: '2月', total: 3800 },
-  { name: '3月', total: 5200 },
-  { name: '4月', total: 4100 },
-  { name: '5月', total: 4800 },
-  { name: '6月', total: 6100 },
-  { name: '7月', total: 5500 },
-  { name: '8月', total: 4900 },
-  { name: '9月', total: 5800 },
-  { name: '10月', total: 6800 },
-  { name: '11月', total: 7200 },
-  { name: '12月', total: 8500 },
+  { name: '1', total: 4500 },
+  { name: '2', total: 3800 },
+  { name: '3', total: 5200 },
+  { name: '4', total: 4100 },
+  { name: '5', total: 4800 },
+  { name: '6', total: 6100 },
+  { name: '7', total: 5500 },
+  { name: '8', total: 4900 },
+  { name: '9', total: 5800 },
+  { name: '10', total: 6800 },
+  { name: '11', total: 7200 },
+  { name: '12', total: 8500 },
 ];
 
 const areaChartConfig = {
@@ -84,24 +84,34 @@ export function OverviewChart({ type = 'area', className }: OverviewChartProps) 
   if (type === 'bar') {
     return (
       <Card className={className}>
-        <CardHeader>
+        <CardHeader className="pb-2">
           <CardTitle>收入概览</CardTitle>
           <CardDescription>2024年月度收入统计</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={barChartConfig} className="h-[300px] w-full">
-            <BarChart data={barChartData} accessibilityLayer>
+        <CardContent className="px-2 sm:px-6 overflow-hidden">
+          <ChartContainer config={barChartConfig} className="h-[250px] sm:h-[300px] w-full">
+            <BarChart
+              data={barChartData}
+              accessibilityLayer
+              margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+            >
               <CartesianGrid vertical={false} strokeDasharray="3 3" />
               <XAxis
                 dataKey="name"
                 tickLine={false}
-                tickMargin={10}
+                tickMargin={8}
                 axisLine={false}
+                fontSize={10}
+                tick={{ fontSize: 10 }}
+                interval={0}
               />
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `¥${value}`}
+                tickFormatter={(value) => `¥${value / 1000}k`}
+                fontSize={12}
+                width={45}
+                hide
               />
               <ChartTooltip
                 content={<ChartTooltipContent />}
@@ -121,21 +131,33 @@ export function OverviewChart({ type = 'area', className }: OverviewChartProps) 
 
   return (
     <Card className={className}>
-      <CardHeader>
+      <CardHeader className="pb-2">
         <CardTitle>访问量趋势</CardTitle>
         <CardDescription>2024年访问量按设备类型统计</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={areaChartConfig} className="h-[300px] w-full">
-          <AreaChart data={areaChartData} accessibilityLayer>
+      <CardContent className="px-2 sm:px-6">
+        <ChartContainer config={areaChartConfig} className="h-[250px] sm:h-[300px] w-full">
+          <AreaChart
+            data={areaChartData}
+            accessibilityLayer
+            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+          >
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
               dataKey="month"
               tickLine={false}
-              tickMargin={10}
+              tickMargin={8}
               axisLine={false}
+              fontSize={12}
+              interval="preserveStartEnd"
             />
-            <YAxis tickLine={false} axisLine={false} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              fontSize={12}
+              width={35}
+              hide
+            />
             <ChartTooltip content={<ChartTooltipContent />} />
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">

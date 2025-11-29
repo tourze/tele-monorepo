@@ -70,7 +70,7 @@ export function RecentSales({ className }: RecentSalesProps) {
                   {sale.email}
                 </p>
               </div>
-              <div className="ml-auto font-medium text-green-600">
+              <div className="ml-4 font-medium text-green-600 whitespace-nowrap text-sm">
                 {sale.amount}
               </div>
             </div>

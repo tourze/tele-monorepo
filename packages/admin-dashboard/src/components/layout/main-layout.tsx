@@ -22,7 +22,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background overflow-x-hidden">
       {/* 顶部导航栏 */}
       <Header
         showMobileMenu
@@ -42,7 +42,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         {/* 主内容区域 - 铺满宽度 */}
         <main
           className={cn(
-            'flex-1 overflow-auto transition-all duration-300',
+            'flex-1 min-w-0 overflow-x-hidden transition-all duration-300',
             'lg:ml-0'
           )}
           style={{
